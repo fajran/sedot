@@ -10,7 +10,7 @@ fi
 
 NODEDIR=$BASE/nodes/$NODE
 PKGS=$NODEDIR/pkgs
-CRON=$NODEDIR/cron
+CRON=$BASE/data/cron/$NODE.cron
 
 mkdir -p $NODEDIR
 [ -f $PKGS ] || touch $PKGS
@@ -27,7 +27,7 @@ echo
 echo "PATH=$PATH:$BASE/bin"
 echo
 
-cat $BASE/nodes/$NODE/pkgs | while read pkg
+cat $PKGS | while read pkg
 do
 	cron=`cat $BASE/pkgs/$pkg/cron`
 	echo "# $pkg"

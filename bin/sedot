@@ -33,7 +33,7 @@ write_error () {
 	echo "name $NAME"
 	echo "status $code"
 	echo "msg $msg"
-	echo "time `date`"
+	echo "time `date -R`"
 
 	exec 1>&3
 }
@@ -47,7 +47,7 @@ do_lock () {
 	exec 4>&2
 	exec 2>/dev/null
 	set -o noclobber
-	if date > $LOCK ; then
+	if date -R > $LOCK ; then
 		RES=0
 	fi
 	set +o noclobber
@@ -117,7 +117,7 @@ if [ "$?" -ne "0" ]; then
 	exit 301
 fi
 
-TIME_START=`date`
+TIME_START=`date -R`
 (
 exec 1>$LOG
 exec 2>$LOG
@@ -132,7 +132,7 @@ export PKGDIR
 $SYNC
 )
 RET=$?
-TIME_FINISH=`date`
+TIME_FINISH=`date -R`
 
 do_unlock $TARGET
 
@@ -149,7 +149,7 @@ echo "name $NAME"
 if [ "$RET" -ne "0" ]; then
 	echo "status 302"
 else
-	echo "status  200"
+	echo "status 200"
 fi
 
 echo "code $RET"

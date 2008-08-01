@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+. `dirname $0`/../etc/config.sh
+
+NODE=$1
+
+if [ "$NODE" == "" ]; then
+	NODE=`hostname -f`
+fi
+
+NODEDIR=$BASE/nodes/$NODE
+PKGS=$NODEDIR/pkgs
+PKGBASE=$BASE/pkgs
+LOGBASE=$BASE/log/size
+
+mkdir -p $LOGBASE
+
+cat $PKGS | while read pkg
+do
+	TARGET=`cat $PKGBASE/$pkg/target`
+	SIZE=`du -s $TARGET | awk '{ print $1 }'`
+	TIME=`date +%s`
+
+	LOG=$LOGBASE/$pkg.size
+
+	echo "$TIME $SIZE" >> $LOG
+done
+
