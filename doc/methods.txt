@@ -1,0 +1,32 @@
+Methods: How to synchronize?
+============================
+
+1. Written in /bin/get.[method-name], e.g. /bin/get.rsync
+
+2. Environment variables:
+
+   $TARGET       from /pkgs/[package]/target
+   $SOURCE       from /pkgs/[package]/source
+   $PKGDIR       is /pkgs/[package]
+   $STEPFILE     is /log/sync/[package]/[timestamp]/step.txt
+
+3. Stdout and Stderr are automatically redirected to
+
+   /log/sync/[package]/[timestamp]/sedot.log
+
+
+Some methods:
+
+1. rsync
+
+   Do rsync twice. The second rsync deletes missing files (--delete-after).
+
+2. rsync.debian
+
+   Suitable for Debian (or its derivatives) repository. 
+   Syncronize pool/ first and then the rest.
+
+3. custom
+
+   Calls /pkgs/[package]/sync.
+

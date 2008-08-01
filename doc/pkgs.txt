@@ -1,0 +1,15 @@
+Package description
+===================
+
+Directory: /pkgs/[package]/
+- [package] is a simple package name, 
+  should not contain special characters including space
+
+Files inside the directory:
+- source: e.g. kambing.ui.edu::ubuntu/     (mandatory)
+- target: e.g. /var/www/ubuntu/            (mandatory)
+- name: e.g. Ubuntu Linux
+- cron: e.g. 0 0 * * *                     (mandatory)
+- method: e.g. rsync.debian                (mandatory)
+  - available methods: see bin/get.[methodname]
+

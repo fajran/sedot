@@ -1,0 +1,18 @@
+Cron
+====
+
+1. Cron entry for each package:
+
+   Active packages are written in /nodes/[hostname.fqdn]/pkgs
+
+2. Cron entry for the node:
+
+   Written in /nodes/[hostname.fqdn]/cron
+
+3. Those crons are merged and written in /data/cron/[hostname.fqdn].cron
+
+4. The cron file is then activated.
+
+
+Note:
+- [hostname.fqdn] is retrieved from "hostname -f"
