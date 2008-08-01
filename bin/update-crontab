@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+set -e
+
+. `dirname $0`/../etc/config.sh
+
+NODE=$1
+
+if [ "$NODE" == "" ]; then
+	NODE=`hostname -f`
+fi
+
+NODEDIR=$BASE/nodes/$NODE
+CRON=$BASE/data/cron/$NODE.cron
+
+# Create crontab file
+
+$BASE/bin/make-crontab $NODE
+
+# Update crontab
+
+crontab - < $CRON
+
