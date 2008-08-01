@@ -133,6 +133,9 @@ class ReportGenerator:
 </head><body>""" % mirror_name)
 
 	def _print_page_footer(self):
+		generated = time.strftime("%a, %d %b %Y %H:%M:%S %z")
+
+		self.out.write("""<div id="footer">Last updated: %s</div>""" % generated)
 		self.out.write("""</body></html>""")
 
 	def _print_header(self):
@@ -144,6 +147,9 @@ class ReportGenerator:
 		self.out.write("""<div id="menu"><ul>""")
 		
 		for pkg in self.packages:
+			if pkg.reports.get('last', None) == None:
+				continue
+
 			self.out.write("""<li><a href="#%s">%s</a></li> """ % (pkg.pkg, pkg.name.replace(" ", "&nbsp;")))
 
 		self.out.write("""</ul></div>""")
@@ -153,6 +159,9 @@ class ReportGenerator:
 		self.out.write("""<div id="content">""")
 
 		for pkg in self.packages:
+
+			if pkg.reports.get('last', None) == None:
+				continue
 
 			last_updated = pkg.reports['last']['finish']
 			last_updated_delta = self._time_delta(last_updated)

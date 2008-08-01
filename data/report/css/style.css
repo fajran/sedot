@@ -52,3 +52,12 @@ h1 {
 .ui-tabs-hide {
 	display: none;
 }
+
+#footer {
+	border-top: 1px solid #ccc;
+	padding: 5px;
+	margin-top: 50px;
+	font-size: 11px;
+	color: #888;
+}
+
