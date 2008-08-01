@@ -7,55 +7,115 @@ PKG=$1
 [ "$PKG" == "" ] && exit 1
 
 TS=`date +%Y%m%d.%H%M%S`
-LOGDIR=$BASE/log/$PKG/$TS
+LOGBASE=$BASE/log/sync/$PKG
+LOGDIR=$LOGBASE/$TS
 PKGDIR=$BASE/pkgs/$PKG
 
 LOG=$LOGDIR/sedot.log
 STATUS=$LOGDIR/status.txt
 
-mkdir -p $LOGDIR
-
 METHOD=`cat $PKGDIR/method`
+
+HOST=`hostname -f`
+
+#
+# Functions
+#
+
+write_error () {
+	code=$1
+	msg=$2
+
+	exec 3>&1
+	exec 1>$STATUS
+
+	echo "pkg $PKG"
+	echo "name $NAME"
+	echo "status $code"
+	echo "msg $msg"
+	echo "time `date`"
+
+	exec 1>&3
+}
+
+do_lock () {
+	TARGET=$1
+	LOCK=$TARGET/.SYNC-in-Progress-$HOST
+	
+	RES=1
+
+	exec 4>&2
+	exec 2>/dev/null
+	set -o noclobber
+	if date > $LOCK ; then
+		RES=0
+	fi
+	set +o noclobber
+	exec 2>&4
+
+	return $RES
+}
+
+do_unlock () {
+	TARGET=$1
+	LOCK=$TARGET/.SYNC-in-Progress-$HOST
+	
+	rm -f $LOCK 2> /dev/null
+}
+
+#
+# Lock
+#
+
+
 
 #
 # Preliminary checking
 #
+
+# Dows package exist?
+mkdir -p $LOGDIR
+
+if [ ! -d $PKGDIR ]; then
+	write_error "501" "Unknown package: $PKG"
+	exit 501
+fi
+
+NAME=`cat $PKGDIR/name`
 
 # Is sync method supported?
 
 SYNC=$BASE/bin/get.$METHOD
 
 if [ ! -f $SYNC ]; then
-	exec 3>&1
-	exec 1>$STATUS
-
-	echo "STATUS 501"
-	echo "MSG Synchronization method ($METHOD) is not supported."
-
-	exec 1>&3
-
-	exit 1
+	write_error "502" "Unsupported synchronization method: $METHOD"
+	exit 502
 fi
 
 # Are source and target specified?
 
 if [ ! -f $PKGDIR/source -o ! -f $PKGDIR/target ]; then
-	exec 3>&1
-	exec 1>$STATUS
-
-	echo "STATUS 501"
-	echo "MSG Synchronization method ($METHOD) is not supported."
-
-	exec 1>&3
-
-	exit 1
+	write_error "503" "Resource source and/or target informations are not found."
+	exit 503
 fi
 
 #
 # Syncronize!
 #
 
+SOURCE=`cat $PKGDIR/source`
+TARGET=`cat $PKGDIR/target`
+STEPFILE=$LOGDIR/step
+
 echo 0 > $STEPFILE
+
+trap 'do_unlock "$TARGET"' SIGINT
+
+do_lock $TARGET
+if [ "$?" -ne "0" ]; then
+	write_error "301" "Unable to gain lock"
+	exit 301
+fi
 
 TIME_START=`date`
 (
@@ -63,9 +123,9 @@ exec 1>$LOG
 exec 2>$LOG
 
 set -e
-export SOURCE=`cat $PKGDIR/source`
-export TARGET=`cat $PKGDIR/target`
-export STEPFILE=$LOGDIR/step
+export SOURCE
+export TARGET
+export STEPFILE
 export LOGDIR
 export PKGDIR
 
@@ -74,25 +134,29 @@ $SYNC
 RET=$?
 TIME_FINISH=`date`
 
+do_unlock $TARGET
+
 #
 # Write status
 #
 
-
 exec 3>&1
 exec 1>$STATUS
 
+echo "pkg $PKG"
+echo "name $NAME"
+
 if [ "$RET" -ne "0" ]; then
-	echo "STATUS 301"
+	echo "status 302"
 else
-	echo "STATUS 200"
+	echo "status  200"
 fi
 
-echo "RETURN $RET"
-echo "STEP `cat $STEPFILE`"
+echo "code $RET"
+echo "step `cat $STEPFILE`"
 
-echo "START $TIME_START"
-echo "FINISH $TIME_FINISH"
+echo "start $TIME_START"
+echo "finish $TIME_FINISH"
 
 
 exec 1>&3
