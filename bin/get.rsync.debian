@@ -9,7 +9,7 @@ echo "## Sedot: First stage"
 rsync -av --stats --exclude-from $PKGDIR/rsync.exclude $SOURCE/pool/ $TARGET/pool/
 
 echo 2 > $STEPFILE
-sleep 5
+sleep 600
 
 echo 3 > $STEPFILE
 echo "## Sedot: Second stage"

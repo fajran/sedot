@@ -28,7 +28,7 @@ echo "PATH=$PATH:$BASE/bin"
 echo
 
 if [ -f $NODEDIR/cron ]; then
-	echo "### Node's cron"
+	echo "### $NODE's cron"
 	echo
 
 	cat $NODEDIR/cron
