@@ -1,7 +1,20 @@
 Quick start guide
 =================
 
+0. Configure. Edit /etc/config.sh
+
+   BASE=/path/to/sedot
+   MIRROR_NAME=Your Mirror Name
+
 1. Define packages in /pkgs/[package] (see /doc/pkgs.txt)
 2. List active packages in /nodes/[hostname.fqdn]/pkgs (see /doc/cron.txt)
 3. Update crontab by calling /bin/update-crontab
+
+
+Note:
+
+- All directories/paths written in these documents are under the base 
+  directory (where you install sedot).
+
+  So, /bin/update-crontab means /path/to/sedot/bin/update-crontab
 
