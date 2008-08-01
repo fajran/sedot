@@ -18,7 +18,7 @@ mkdir -p $LOGBASE
 cat $PKGS | while read pkg
 do
 	TARGET=`cat $PKGBASE/$pkg/target`
-	SIZE=`du -s $TARGET | awk '{ print $1 }'`
+	SIZE=`nice -n 9 du -s $TARGET | awk '{ print $1 }'`
 	TIME=`date +%s`
 
 	LOG=$LOGBASE/$pkg.size
