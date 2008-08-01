@@ -1,0 +1,1 @@
+0 0 * * * /home/iang/project/kambing/sedot/dev/trunk/bin/sedot debian > /dev/null 2>&1

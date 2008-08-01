@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+set -e
+
+[ -f $PKGDIR/rsync.exclude ] || touch $PKGDIR/rsync.exclude
+
+echo 1 > $STEPFILE
+rsync -av --exclude-from $PKGDIR/rsync.exclude $SOURCE $TARGET
+
+echo 2 > $STEPFILE
+sleep 5
+
+echo 3 > $STEPFILE
+rsync -av --exclude-from $PKGDIR/rsync.exclude --delete-after $SOURCE $TARGET
+

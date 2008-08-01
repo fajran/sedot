@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+set -e
+
+[ -f $PKGDIR/rsync.exclude ] || touch $PKGDIR/rsync.exclude
+
+echo 1 > $STEPFILE
+rsync -av --exclude-from $PKGDIR/rsync.exclude $SOURCE/pool/ $TARGET/pool/
+
+echo 2 > $STEPFILE
+sleep 5
+
+echo 3 > $STEPFILE
+rsync -av --exclude-from $PKGDIR/rsync.exclude --delete-after $SOURCE $TARGET
+
+echo 4 > $STEPFILE
+mkdir -p $TARGET/project/trace/
+
+echo 5 > $STEPFILE
+date > $TARGET/project/trace/`hostname -f`
+

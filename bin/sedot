@@ -1,0 +1,101 @@
+#!/usr/bin/env bash
+
+. `dirname $0`/../etc/config.sh
+
+PKG=$1
+
+[ "$PKG" == "" ] && exit 1
+
+TS=`date +%Y%m%d.%H%M%S`
+LOGDIR=$BASE/log/$PKG/$TS
+PKGDIR=$BASE/pkgs/$PKG
+
+LOG=$LOGDIR/sedot.log
+STATUS=$LOGDIR/status.txt
+
+mkdir -p $LOGDIR
+
+METHOD=`cat $PKGDIR/method`
+
+#
+# Preliminary checking
+#
+
+# Is sync method supported?
+
+SYNC=$BASE/bin/get.$METHOD
+
+if [ ! -f $SYNC ]; then
+	exec 3>&1
+	exec 1>$STATUS
+
+	echo "STATUS 501"
+	echo "MSG Synchronization method ($METHOD) is not supported."
+
+	exec 1>&3
+
+	exit 1
+fi
+
+# Are source and target specified?
+
+if [ ! -f $PKGDIR/source -o ! -f $PKGDIR/target ]; then
+	exec 3>&1
+	exec 1>$STATUS
+
+	echo "STATUS 501"
+	echo "MSG Synchronization method ($METHOD) is not supported."
+
+	exec 1>&3
+
+	exit 1
+fi
+
+#
+# Syncronize!
+#
+
+echo 0 > $STEPFILE
+
+TIME_START=`date`
+(
+exec 1>$LOG
+exec 2>$LOG
+
+set -e
+export SOURCE=`cat $PKGDIR/source`
+export TARGET=`cat $PKGDIR/target`
+export STEPFILE=$LOGDIR/step
+export LOGDIR
+export PKGDIR
+
+$SYNC
+)
+RET=$?
+TIME_FINISH=`date`
+
+#
+# Write status
+#
+
+
+exec 3>&1
+exec 1>$STATUS
+
+if [ "$RET" -ne "0" ]; then
+	echo "STATUS 301"
+else
+	echo "STATUS 200"
+fi
+
+echo "RETURN $RET"
+echo "STEP `cat $STEPFILE`"
+
+echo "START $TIME_START"
+echo "FINISH $TIME_FINISH"
+
+
+exec 1>&3
+
+
+exit 0
