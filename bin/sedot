@@ -136,6 +136,8 @@ TIME_FINISH=`date -R`
 
 do_unlock $TARGET
 
+gzip -9 $LOG
+
 #
 # Write status
 #
