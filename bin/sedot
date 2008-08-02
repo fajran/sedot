@@ -64,16 +64,10 @@ do_unlock () {
 }
 
 #
-# Lock
-#
-
-
-
-#
 # Preliminary checking
 #
 
-# Dows package exist?
+# Does package exist?
 mkdir -p $LOGDIR
 
 if [ ! -d $PKGDIR ]; then
@@ -136,6 +130,10 @@ TIME_FINISH=`date -R`
 
 do_unlock $TARGET
 
+if [ "$RET" -ne "0" ]; then
+	tail -n 20 $LOG > $LOG.last.txt
+fi
+
 gzip -9 $LOG
 
 #
@@ -160,8 +158,42 @@ echo "step `cat $STEPFILE`"
 echo "start $TIME_START"
 echo "finish $TIME_FINISH"
 
-
 exec 1>&3
+
+#
+# Call plugins
+#
+
+if [ -f $BASE/etc/post-sync-plugins ]; then
+	PLUGINDIR=$BASE/bin/plugins
+
+	cat $BASE/etc/post-sync-plugins | while read plugin
+	do
+
+		if [ -x $PLUGINDIR/$plugin ]; then
+
+			(
+			set -e
+
+			exec 1>/dev/null
+			exec 2>/dev/null
+			
+			export SEDOT_RETURN=$RET
+			export SEDOT_TIME_START=$TIME_START
+			export SEDOT_TIME_FINISH=$TIME_FINISH
+			export SEDOT_PACKAGE=$PKG
+			export SEDOT_NAME=$NAME
+			export SEDOT_TIMESTAMP=$TS
+			export SEDOT_LOG=$LOG
+			export SEDOT_STATUS=$STATUS
+
+			$PLUGINDIR/$plugin
+			)
+
+		fi
+
+	done
+fi
 
 
 exit 0

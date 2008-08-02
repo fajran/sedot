@@ -1,3 +1,8 @@
+
+Unless stated otherwise, the codes are licensed under GNU GPL 2.0.
+
+======================================================================
+
 		    GNU GENERAL PUBLIC LICENSE
 		       Version 2, June 1991
 
