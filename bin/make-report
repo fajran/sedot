@@ -128,7 +128,6 @@ class ReportGenerator:
 <title>%s</title>
 <link rel="stylesheet" type="text/css" href="css/style.css"/>
 <script type="text/javascript" src="js/jquery.js"></script>
-<script type="text/javascript" src="js/jquery.ui.tabs.js"></script>
 <script type="text/javascript" src="js/page.js"></script>
 </head><body>""" % mirror_name)
 

@@ -45,11 +45,7 @@ h1 {
 	padding-left: 20px;
 }
 
-.ui-tabs-panel {
-
-}
-
-.ui-tabs-hide {
+.hide {
 	display: none;
 }
 
