@@ -11,7 +11,7 @@ LOGBASE=$BASE/log/sync/$PKG
 LOGDIR=$LOGBASE/$TS
 PKGDIR=$BASE/pkgs/$PKG
 
-LOG=$LOGDIR/sedot.log
+LOG=$LOGDIR/sync.log
 STATUS=$LOGDIR/status.txt
 
 METHOD=`cat $PKGDIR/method`
@@ -63,6 +63,11 @@ do_unlock () {
 	rm -f $LOCK 2> /dev/null
 }
 
+get_content () {
+	FILE=$1
+	echo `cat $FILE | grep -v '^\s*#' | head -n1`
+}
+
 #
 # Preliminary checking
 #
@@ -97,8 +102,10 @@ fi
 # Syncronize!
 #
 
-SOURCE=`cat $PKGDIR/source`
-TARGET=`cat $PKGDIR/target`
+
+SOURCE=`get_content "$PKGDIR/source"`
+TARGET=`get_content "$PKGDIR/target"`
+
 STEPFILE=$LOGDIR/step
 
 echo 0 > $STEPFILE
