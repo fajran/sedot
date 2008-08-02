@@ -186,6 +186,11 @@ if [ -f $BASE/etc/post-sync-plugins ]; then
 			export SEDOT_TIMESTAMP=$TS
 			export SEDOT_LOG=$LOG
 			export SEDOT_STATUS=$STATUS
+			export SEDOT_METHOD=$METHOD
+			export SEDOT_BASE=$BASE
+			export SEDOT_HOSTNAME=$HOSTNAME
+			export SEDOT_SOURCE=$SOURCE
+			export SEDOT_TARGET=$TARGET
 
 			$PLUGINDIR/$plugin
 			)
