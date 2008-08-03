@@ -15,9 +15,13 @@ CRON=$BASE/data/cron/$NODE.cron
 
 # Create crontab file
 
+cp $CRON $CRON.old
 $BASE/bin/make-crontab $NODE
 
 # Update crontab
 
-crontab - < $CRON
+crontab -l > $CRON.old.active
+cat $CRON.old.active | sed '/BEGIN SEDOT CRONTAB LIST/,/END SEDOT CRONTAB LIST/d' > $CRON.active
+cat $CRON >> $CRON.active
+crontab - < $CRON.active
 
