@@ -27,7 +27,7 @@ echo "## Generated at `date`"
 echo
 echo "## Node: $NODE"
 echo 
-echo "PATH=$PATH:$BASE/bin"
+echo "SEDOT_BASE=$BASE"
 echo
 
 if [ -f $NODEDIR/cron ]; then
@@ -45,7 +45,7 @@ cat $PKGS | while read pkg
 do
 	cron=`cat $BASE/pkgs/$pkg/cron`
 	echo "# $pkg"
-	echo "$cron sedot $pkg > /dev/null 2>&1"
+	echo "$cron \$SEDOT_BASE/bin/sedot $pkg > /dev/null 2>&1"
 	echo
 done
 
