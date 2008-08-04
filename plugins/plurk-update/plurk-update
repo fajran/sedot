@@ -1,0 +1,50 @@
+#!/usr/bin/env python
+
+import sys
+import os
+from ConfigParser import SafeConfigParser, NoOptionError
+
+plugindir = os.environ['SEDOT_PLUGINDIR']
+sys.path += [os.path.join(plugindir, 'lib')]
+
+#
+# Config
+#
+
+username = ''
+password = ''
+
+cp = SafeConfigParser()
+cp.read(os.path.join(plugindir, 'config.ini'))
+
+try:
+	username = cp.get('plurk', 'username')
+	password = cp.get('plurk', 'password')
+except NoOptionError:
+	pass
+
+if username == '' or password == '':
+	print username
+	print password
+	sys.exit(1)
+
+
+#
+# plurk-update
+#
+
+import plurkapi
+
+ret = int(os.environ['SEDOT_RETURN'])
+name = os.environ['SEDOT_NAME']
+
+if ret == 0:
+	msg = "%s has been updated." % name
+	action = "says"
+
+	p = plurkapi.PlurkAPI()
+	p.login(username, password)
+	
+	p.addPlurk(qualifier=action, content=msg)
+
+

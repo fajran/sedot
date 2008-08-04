@@ -148,12 +148,14 @@ exec 1>&3
 #
 
 if [ -f $BASE/etc/post-sync-plugins ]; then
-	PLUGINDIR=$BASE/bin/plugins
+	PLUGINDIR=$BASE/plugins
 
 	cat $BASE/etc/post-sync-plugins | while read plugin
 	do
 
-		if [ -x $PLUGINDIR/$plugin ]; then
+		PLUGIN=$PLUGINDIR/$plugin/$plugin
+
+		if [ -x $PLUGIN ]; then
 
 			(
 			set -e
@@ -174,8 +176,9 @@ if [ -f $BASE/etc/post-sync-plugins ]; then
 			export SEDOT_HOSTNAME=$HOSTNAME
 			export SEDOT_SOURCE=$SOURCE
 			export SEDOT_TARGET=$TARGET
+			export SEDOT_PLUGINDIR=$PLUGINDIR/$plugin
 
-			$PLUGINDIR/$plugin
+			$PLUGIN
 			)
 
 		fi
