@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 . `dirname $0`/../etc/config.sh
+. $BASE/lib/common.sh
 
 PKG=$1
 
@@ -36,31 +37,6 @@ write_error () {
 	echo "time `date -R`"
 
 	exec 1>&3
-}
-
-do_lock () {
-	TARGET=$1
-	LOCK=$TARGET/.SYNC-in-Progress-$HOST
-	
-	RES=1
-
-	exec 4>&2
-	exec 2>/dev/null
-	set -o noclobber
-	if date -R > $LOCK ; then
-		RES=0
-	fi
-	set +o noclobber
-	exec 2>&4
-
-	return $RES
-}
-
-do_unlock () {
-	TARGET=$1
-	LOCK=$TARGET/.SYNC-in-Progress-$HOST
-	
-	rm -f $LOCK 2> /dev/null
 }
 
 get_content () {
@@ -110,9 +86,9 @@ STEPFILE=$LOGDIR/step
 
 echo 0 > $STEPFILE
 
-trap 'do_unlock "$TARGET"' SIGINT
+trap 'do_unlock "$TARGET/.SYNC-in-Progress-$HOST"' SIGINT
 
-do_lock $TARGET
+do_lock $TARGET/.SYNC-in-Progress-$HOST
 if [ "$?" -ne "0" ]; then
 	write_error "301" "Unable to gain lock"
 	exit 301
@@ -135,7 +111,7 @@ $SYNC
 RET=$?
 TIME_FINISH=`date -R`
 
-do_unlock $TARGET
+do_unlock $TARGET/.SYNC-in-Progress-$HOST
 
 if [ "$RET" -ne "0" ]; then
 	tail -n 20 $LOG > $LOG.last.txt

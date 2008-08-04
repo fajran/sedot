@@ -1,12 +1,31 @@
 #!/usr/bin/env bash
 
 . `dirname $0`/../etc/config.sh
+. $BASE/lib/common.sh
 
 NODE=$1
 
 if [ "$NODE" == "" ]; then
 	NODE=`hostname -f`
 fi
+
+#
+# Collect usage
+#
+
+# Check lock
+
+HOST=`hostname -f`
+LOCK=$BASE/data/lock/collect-usage-$HOST
+
+trap 'do_unlock "$LOCK"' SIGINT
+
+do_lock "$LOCK"
+if [ "$?" -ne "0" ]; then
+	exit 1
+fi
+
+# Get usage
 
 NODEDIR=$BASE/nodes/$NODE
 PKGS=$NODEDIR/pkgs
@@ -25,4 +44,8 @@ do
 
 	echo "$TIME $SIZE" >> $LOG
 done
+
+# Unlock
+
+do_unlock "$LOCK"
 
