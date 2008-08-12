@@ -23,7 +23,7 @@ HOST=`hostname -f`
 # Functions
 #
 
-write_error () {
+write_status () {
 	code=$1
 	msg=$2
 
@@ -52,7 +52,7 @@ get_content () {
 mkdir -p $LOGDIR
 
 if [ ! -d $PKGDIR ]; then
-	write_error "501" "Unknown package: $PKG"
+	write_status "501" "Unknown package: $PKG"
 	exit 501
 fi
 
@@ -63,14 +63,14 @@ NAME=`cat $PKGDIR/name`
 SYNC=$BASE/bin/get.$METHOD
 
 if [ ! -f $SYNC ]; then
-	write_error "502" "Unsupported synchronization method: $METHOD"
+	write_status "502" "Unsupported synchronization method: $METHOD"
 	exit 502
 fi
 
 # Are source and target specified?
 
 if [ ! -f $PKGDIR/source -o ! -f $PKGDIR/target ]; then
-	write_error "503" "Resource source and/or target informations are not found."
+	write_status "503" "Resource source and/or target informations are not found."
 	exit 503
 fi
 
@@ -90,11 +90,13 @@ trap 'do_unlock "$TARGET/.SYNC-in-Progress-$HOST"' SIGINT
 
 do_lock $TARGET/.SYNC-in-Progress-$HOST
 if [ "$?" -ne "0" ]; then
-	write_error "301" "Unable to gain lock"
+	write_status "301" "Unable to gain lock"
 	exit 301
 fi
 
 TIME_START=`date -R`
+write_status "100" "In progress"
+
 (
 exec 1>$LOG
 exec 2>$LOG
@@ -108,6 +110,7 @@ export PKGDIR
 
 $SYNC
 )
+
 RET=$?
 TIME_FINISH=`date -R`
 
@@ -123,21 +126,17 @@ gzip -9 $LOG
 # Write status
 #
 
-exec 3>&1
-exec 1>$STATUS
-
-echo "pkg $PKG"
-echo "name $NAME"
-
 if [ "$RET" -ne "0" ]; then
-	echo "status 302"
+	write_status "302" "Error"
 else
-	echo "status 200"
+	write_status "200" "Done"
 fi
+
+exec 3>&1
+exec 1>>$STATUS
 
 echo "code $RET"
 echo "step `cat $STEPFILE`"
-
 echo "start $TIME_START"
 echo "finish $TIME_FINISH"
 

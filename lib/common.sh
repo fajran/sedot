@@ -22,3 +22,18 @@ do_unlock () {
 	rm -f $LOCK 2> /dev/null
 }
 
+get_url () {
+	PKG=$1
+	PROTOCOL=$2
+
+	FURL=$BASE/pkgs/$PKG/url
+	[ -f $FURL ] || return 1
+
+	
+	if [ "$PROTOCOL" != "" ]; then
+		grep "^$PROTOCOL:\/\/" $FURL
+	else
+		cat $FURL
+	fi
+}
+
