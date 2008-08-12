@@ -1,0 +1,71 @@
+body {
+	margin: 20px;
+}
+h1, h2 {
+	font-family: "trebuchet ms", helvetica, sans-serif;
+	margin: 0px;
+}
+h1 {
+	font-size: 20pt;
+	border-bottom: 1px solid #888;
+	margin-bottom: 20px;
+}
+h2 {
+	font-size: 16pt;
+	margin-bottom: 10px;
+}
+
+#mirror table {
+	font-family: verdana, helvetica, sans-serif;
+	font-size: 10pt;
+}
+
+#mirror table th {
+	padding: 2px 20px;
+}
+#mirror table td {
+	padding: 5px 20px 5px 10px;
+	text-align: center;
+}
+#mirror table tr td.date {
+	font-size: 8pt;
+	padding: 2px 20px;
+}
+#mirror table td.name {
+	padding-right: 50px;
+	text-align: left;
+}
+#mirror table td.age {
+	text-align: left;
+}
+#mirror table tr th {
+	background: #ccc;
+}
+#mirror table {
+	border-collapse: collapse;
+}
+#mirror table td, #mirror table th {
+	border: 1px solid #888;
+	border-width: 1px 0 1px 0;
+}
+#mirror table .name, #mirror table .status {
+	border-right: 1px dotted #888;
+}
+
+
+#footer {
+	border-top: 1px solid #888;
+	margin-top: 50px;
+	font-size: 10pt;
+	font-family: verdana, helvetica, sans-serif;
+}
+#generated {
+	float: left;
+	margin: 0px;
+}
+#sedot {
+	float: right;
+	margin: 0px;
+}
+
+

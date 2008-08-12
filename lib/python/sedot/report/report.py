@@ -1,6 +1,6 @@
 
-from .. import Package, NoPackageError
-from .. import SEDOT_CONFIG
+from sedot import Package, NoPackageError
+from sedot import SEDOT_CONFIG
 import os
 import time
 
@@ -32,16 +32,17 @@ class Generator:
 		self._print_page_footer()
 
 	def _print_page_header(self):
-		self.f.write("""
+		self.f.write("""<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html><head>
 <title>%s</title>
+<link rel="stylesheet" type="text/css" href="style.css"/>
 </head><body><div id="c">
 """ % (self.name))
 
 	def _print_page_footer(self):
 		self.f.write("""
-</div></body></html>
-""")
+</div></body></html>""")
 
 	def _print_header(self):
 		self.f.write("""
@@ -81,17 +82,24 @@ class Generator:
 """)
 
 		template = Template("""
-	<tr><td>$mirror</td>
-		<td>$last_start</td>
-		<td>$last_finish</td>
-		<td>$last_status</td>
-		<td>$sync_time</td>
-		<td>$sync_age</td>
+	<tr><td class="name">$mirror</td>
+		<td class="date">$last_start</td>
+		<td class="date">$last_finish</td>
+		<td class="status $last_status_class">$last_status</td>
+		<td class="date">$sync_time</td>
+		<td class="age">$sync_age</td>
 	</tr>
 """)
-		for pkg in self.packages:
+
+		pkgs = self.packages.keys()
+		pkgs.sort(lambda a, b: cmp(self.packages[a].name, self.packages[b].name))
+
+		for pkg in pkgs:
 
 			package = self.packages[pkg]
+
+			if not package.status:
+				continue
 
 			if package.status.last:
 				if package.status.last.start:
@@ -105,6 +113,9 @@ class Generator:
 				else:
 					last_finish = "in progress"
 					last_status = ""
+
+				last_status_class=self._make_status_class(package.status.last)
+
 			else:
 				last_start = "unknown"
 				last_finish = "unknown"
@@ -122,6 +133,7 @@ class Generator:
 				last_start=last_start,
 				last_finish=last_finish,
 				last_status=last_status,
+				last_status_class=last_status_class,
 				sync_time=sync_time,
 				sync_age=sync_age
 			))
@@ -132,14 +144,14 @@ class Generator:
 """)
 
 	def _make_time(self, tuple=None):
-		format = "%a, %d %b %Y %H:%M:%S"
+		format = "%d/%m/%Y %H:%M:%S"
 		if tuple == None:
 			return time.strftime(format)
 		else:
 			return time.strftime(format, tuple)
 
 	def _make_status(self, status):
-		if status.code == 302:
+		if status.success:
 			msg = "Success"
 		else:
 			msg = "Fail"
@@ -159,22 +171,25 @@ class Generator:
 		dmin = 60
 
 		res = []
-		if delta / dday > 0:
+		if delta / dday >= 1:
 			res.append("%d day" % int(delta/dday))
 			delta = delta % dday
 
-		if delta / dhour > 0:
+		if delta / dhour >= 1:
 			res.append("%d hour" % int(delta/dhour))
-			delta = delta % dday
+			delta = delta % dhour
 
-		if delta / dmin > 0:
+		if delta / dmin >= 1:
 			res.append("%d min" % int(delta/dmin))
 			delta = delta % dmin
 
-		if delta > 0:
+		if delta >= 1:
 			res.append("%d sec" % int(delta))
 
 		return " ".join(res)
+
+	def _make_status_class(self, data):
+		return ""
 
 
 class Report:

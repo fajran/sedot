@@ -1,7 +1,7 @@
 
 import os
-from . import SEDOT_BASE
-from status import PackageStatus
+from sedot import SEDOT_BASE
+from status import PackageStatus, NoStatusError
 
 __all__ = ['Package', 'NoPackageError']
 
@@ -47,6 +47,9 @@ class Package:
 
 	def load_status(self):
 		
-		self.status = PackageStatus(self.package)
+		try:
+			self.status = PackageStatus(self.package)
+		except NoStatusError:
+			self.status = None
 
 			

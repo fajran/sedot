@@ -1,5 +1,5 @@
 
-from . import SEDOT_BASE
+from sedot import SEDOT_BASE
 import os
 import time
 import rfc822
