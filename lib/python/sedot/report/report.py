@@ -156,7 +156,7 @@ class Generator:
 		else:
 			msg = "Fail"
 
-		url = "log/sync/%s/%s/sync.log.gz" % (status.data['pkg'], status.timestamp)
+		url = "log/%s/%s/sync.log.gz" % (status.data['pkg'], status.timestamp)
 
 		return '<a href="%s">%s</a>' % (url, msg)
 
