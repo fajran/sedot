@@ -26,6 +26,7 @@ class SyncStatus:
 		self.time = None
 		self.start = None
 		self.finish = None
+		self.status = -1
 
 		self._load()
 	
@@ -55,6 +56,7 @@ class SyncStatus:
 					self.success = True
 				elif val == "100":
 					self.done = False
+				self.status = int(val)
 			if key in 'time':
 				self.time = self._parse_time(val)
 			if key == 'start':
@@ -98,7 +100,7 @@ class PackageStatus:
 			except NoStatusError:
 				continue
 
-			if status.code == 301:  # Unable to gain lock
+			if status.status == 301:  # Unable to gain lock
 				continue
 
 			if self.last == None:
