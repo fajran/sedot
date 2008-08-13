@@ -205,7 +205,7 @@ class Generator:
 		if data == None:
 			return "never"
 		else:
-			t = time.mktime(tuple.finish)
+			t = time.mktime(data.finish)
 			now = time.mktime(time.localtime())
 			delta = now - t
 
