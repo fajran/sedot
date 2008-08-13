@@ -51,6 +51,24 @@ h2 {
 #mirror table .name, #mirror table .status {
 	border-right: 1px dotted #888;
 }
+#mirror td.unknown {
+	background: #ddd;
+}
+#mirror td.inprogress {
+	background: #afa;
+}
+#mirror td.fail {
+	background: #faa;
+}
+#mirror td.never {
+	background: #faa;
+}
+#mirror td.old {
+	background: #ffa;
+}
+#mirror td.outdated {
+	background: #faa;
+}
 
 
 #footer {

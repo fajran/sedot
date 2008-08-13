@@ -83,11 +83,11 @@ class Generator:
 
 		template = Template("""
 	<tr><td class="name">$mirror</td>
-		<td class="date">$last_start</td>
-		<td class="date">$last_finish</td>
-		<td class="status $last_status_class">$last_status</td>
-		<td class="date">$sync_time</td>
-		<td class="age">$sync_age</td>
+		<td class="date $class_last">$last_start</td>
+		<td class="date $class_last">$last_finish</td>
+		<td class="status $class_last">$last_status</td>
+		<td class="date $class_success">$sync_time</td>
+		<td class="age $class_success">$sync_age</td>
 	</tr>
 """)
 
@@ -114,7 +114,6 @@ class Generator:
 					last_finish = "in progress"
 					last_status = ""
 
-				last_status_class=self._make_status_class(package.status.last)
 
 			else:
 				last_start = "unknown"
@@ -128,14 +127,18 @@ class Generator:
 				sync_time = "Never"
 				sync_age = "-"
 
+			class_last=self._make_class_last(package.status.last)
+			class_success=self._make_class_success(package.status.success)
+
 			self.f.write(template.substitute(
 				mirror=package.name,
 				last_start=last_start,
 				last_finish=last_finish,
 				last_status=last_status,
-				last_status_class=last_status_class,
 				sync_time=sync_time,
-				sync_age=sync_age
+				sync_age=sync_age,
+				class_last=class_last,
+				class_success=class_success,
 			))
 
 		self.f.write("""
@@ -188,9 +191,32 @@ class Generator:
 
 		return " ".join(res)
 
-	def _make_status_class(self, data):
-		return ""
+	def _make_class_last(self, data):
+		if data == None:
+			return "unknown"
+		elif not data.finish:
+			return "inprogress"
+		elif data.success:
+			return "success"
+		else:
+			return "fail"
 
+	def _make_class_success(self, data):
+		if data == None:
+			return "never"
+		else:
+			t = time.mktime(tuple.finish)
+			now = time.mktime(time.localtime())
+			delta = now - t
+
+			day = 86400
+
+			if delta > 7 * day:
+				return "outdated"
+			elif delta > 2 * day:
+				return "old"
+			else:
+				return "uptodate"
 
 class Report:
 	
