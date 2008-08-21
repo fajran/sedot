@@ -10,13 +10,13 @@ if [ "$NODE" == "" ]; then
 fi
 
 #
-# Collect usage
+# Collect mirror size
 #
 
 # Check lock
 
 HOST=`hostname -f`
-LOCK=$BASE/data/lock/collect-usage-$HOST
+LOCK=$BASE/data/lock/collect-mirror-size-$HOST
 
 trap 'do_unlock "$LOCK"' SIGINT
 
@@ -25,24 +25,24 @@ if [ "$?" -ne "0" ]; then
 	exit 1
 fi
 
-# Get usage
+# Get mirror size
 
 NODEDIR=$BASE/nodes/$NODE
 PKGS=$NODEDIR/pkgs
 PKGBASE=$BASE/pkgs
-LOGBASE=$BASE/log/size
+LOGBASE=$BASE/log/mirror-size
 
 mkdir -p $LOGBASE
+TS=`date '+%Y%m%d.%H%M%S'`
 
 cat $PKGS | while read pkg
 do
 	TARGET=`cat $PKGBASE/$pkg/target`
 	SIZE=`nice -n 9 du -s $TARGET | awk '{ print $1 }'`
-	TIME=`date +%s`
 
 	LOG=$LOGBASE/$pkg.size
 
-	echo "$TIME $SIZE" >> $LOG
+	echo "$TS $SIZE" >> $LOG
 done
 
 # Unlock
