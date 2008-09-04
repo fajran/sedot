@@ -86,7 +86,7 @@ STEPFILE=$LOGDIR/step
 
 echo 0 > $STEPFILE
 
-trap 'do_unlock "$TARGET/.SYNC-in-Progress-$HOST"' SIGINT
+trap 'do_unlock "$TARGET/.SYNC-in-Progress-$HOST"' 1 2 3 6
 
 do_lock $TARGET/.SYNC-in-Progress-$HOST
 if [ "$?" -ne "0" ]; then

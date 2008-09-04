@@ -18,7 +18,7 @@ fi
 HOST=`hostname -f`
 LOCK=$BASE/data/lock/collect-disk-usage-$HOST
 
-trap 'do_unlock "$LOCK"' SIGINT
+trap 'do_unlock "$LOCK"' 1 2 3 6
 
 do_lock "$LOCK"
 if [ "$?" -ne "0" ]; then
