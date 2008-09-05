@@ -15,6 +15,10 @@ def get_config():
 	f = open(file)
 	for line in f.readlines():
 		line = line.strip()
+
+		if len(line) == 0:
+			continue
+
 		if line[0] == '#':
 			continue
 
