@@ -1,4 +1,6 @@
 
+PATH=$BASE/bin:$PATH
+
 do_lock () {
 	LOCK=$1
 	
@@ -36,4 +38,20 @@ get_url () {
 		cat $FURL
 	fi
 }
+
+get_color () {
+	PKG=$1
+
+	FCOLOR=$BASE/pkgs/$PKG/color
+	if [ ! -f $FCOLOR ]; then
+		echo $DEFAULT_COLOR
+	else
+		cat $FCOLOR | sed 's/#//g'
+	fi
+}
+
+echo_error () {
+	echo "$*" >&2
+}
+
 
