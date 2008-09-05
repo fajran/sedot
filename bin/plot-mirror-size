@@ -9,11 +9,57 @@ if [ "$NODE" == "" ]; then
 	NODE=`hostname -f`
 fi
 
+#
+# Functions
+#
+
+plot () {
+
+	PKG=$1
+	RRD=$RRDBASE/$PKG.rrd
+
+	if [ ! -f "$RRD" ]; then
+		return 1;
+	fi
+
+	IMGWEEK=$IMGBASE/$PKG.week.png
+	IMGYEAR=$IMGBASE/$PKG.year.png
+
+	COLOR=`get_color $PKG`
+	TITLE=`cat $BASE/pkgs/$PKG/name`
+
+	# Weekly image
+	
+	rrdtool graph $IMGWEEK \
+		--start -1w \
+		--title "$TITLE" \
+		DEF:size=$RRD:size:AVERAGE \
+		CDEF:sizeKB=size,1024,* \
+		LINE2:sizeKB\#$COLOR > /dev/null
+	
+	# Anual image
+	
+	rrdtool graph $IMGYEAR \
+		--start -1y \
+		--title "$TITLE" \
+		DEF:size=$RRD:size:AVERAGE \
+		CDEF:sizeKB=size,1024,* \
+		LINE2:sizeKB\#$COLOR > /dev/null
+}
+
+#
+# Plot graphs
+#
+
 NODEDIR=$BASE/nodes/$NODE
 PKGS=$NODEDIR/pkgs
 
+RRDBASE=$BASE/log/mirror-size
+IMGBASE=$BASE/data/report/mirror-size
+mkdir -p $IMGBASE
+
 cat $PKGS | while read pkg
 do
-	plot-mirror-size-pkg $pkg
+	plot $pkg
 done
 
