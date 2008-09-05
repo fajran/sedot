@@ -1,4 +1,4 @@
-501 Unknown package
+501 Unknown package (deprecated)
 502 Unsupported synchronization method
 503 Resource source and/or target informations are not found
 301 Unable to gain lock

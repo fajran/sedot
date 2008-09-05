@@ -25,3 +25,5 @@ cat $CRON.old.active | sed '/BEGIN SEDOT CRONTAB LIST/,/END SEDOT CRONTAB LIST/d
 cat $CRON >> $CRON.active
 crontab - < $CRON.active
 
+echo "Crontab updated."
+

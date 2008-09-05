@@ -5,7 +5,15 @@
 
 PKG=$1
 
-[ "$PKG" == "" ] && exit 1
+if [ "$PKG" == "" ]; then
+	echo_error "Usage: $0 [package]"
+	exit 1
+fi
+
+if [ ! -d $PKGDIR ]; then
+	echo_error "Unknown package: $PKG"
+	exit 2
+fi
 
 TS=`date +%Y%m%d.%H%M%S`
 LOGBASE=$BASE/log/sync/$PKG
@@ -48,16 +56,6 @@ get_content () {
 # Preliminary checking
 #
 
-# Does package exist?
-mkdir -p $LOGDIR
-
-if [ ! -d $PKGDIR ]; then
-	write_status "501" "Unknown package: $PKG"
-	exit 501
-fi
-
-NAME=`cat $PKGDIR/name`
-
 # Is sync method supported?
 
 SYNC=$BASE/bin/get.$METHOD
@@ -78,7 +76,7 @@ fi
 # Syncronize!
 #
 
-
+NAME=`cat $PKGDIR/name`
 SOURCE=`get_content "$PKGDIR/source"`
 TARGET=`get_content "$PKGDIR/target"`
 
