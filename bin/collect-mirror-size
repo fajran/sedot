@@ -10,10 +10,43 @@ if [ "$NODE" == "" ]; then
 fi
 
 #
-# Collect mirror size
+# Functions
 #
 
+ensure_rrd () {
+	RRD=$1
+
+	[ -f "$RRD" ] && return 0
+
+	NOW=`date "+%s"`
+	INTERVAL=86400
+	START=$(( NOW - 3 * INTERVAL ))
+	HIYEAR=$(( 366 * 5 ))
+	LOYEAR=$(( 52 * 15 ))
+
+	rrdtool create "$RRD" \
+		--step $INTERVAL \
+		--start $START \
+		DS:value:GAUGE:$INTERVAL:0:U \
+		RRA:AVERAGE:0.5:1:$HIYEAR \
+		RRA:AVERAGE:0.5:7:$LOYEAR \
+		RRA:MIN:0.5:7:$LOYEAR \
+		RRA:MAX:0.5:7:$LOYEAR
+}
+
+update_rrd () {
+	RRD=$1
+	VAL=$2
+
+	NOW=`date "+%s"`
+
+	rrdtool update "$RRD" $NOW:$VAL
+}
+
+
+#
 # Check lock
+#
 
 HOST=`hostname -f`
 LOCK=$BASE/data/lock/collect-mirror-size-$HOST
@@ -25,7 +58,9 @@ if [ "$?" -ne "0" ]; then
 	exit 1
 fi
 
+#
 # Get mirror size
+#
 
 NODEDIR=$BASE/nodes/$NODE
 PKGS=$NODEDIR/pkgs
@@ -33,19 +68,21 @@ PKGBASE=$BASE/pkgs
 LOGBASE=$BASE/log/mirror-size
 
 mkdir -p $LOGBASE
-TS=`date '+%Y%m%d.%H%M%S'`
 
 cat $PKGS | while read pkg
 do
 	TARGET=`cat $PKGBASE/$pkg/target`
 	SIZE=`nice -n 9 du -s $TARGET | awk '{ print $1 }'`
 
-	LOG=$LOGBASE/$pkg.size
+	RRD=$LOGBASE/$pkg.rrd
 
-	echo "$TS $SIZE" >> $LOG
+	ensure_rrd "$RRD"
+	update_rrd "$RRD" "$size"
 done
 
+#
 # Unlock
+#
 
 do_unlock "$LOCK"
 
