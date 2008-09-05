@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+. `dirname $0`/../etc/config.sh
+. $BASE/lib/common.sh
+
+NODE=$1
+
+if [ "$NODE" == "" ]; then
+	NODE=`hostname -f`
+fi
+
+NODEDIR=$BASE/nodes/$NODE
+PKGS=$NODEDIR/pkgs
+
+cat $PKGS | while read pkg
+do
+	plot-mirror-size-pkg $pkg
+done
+

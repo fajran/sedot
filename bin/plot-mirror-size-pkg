@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+
+. `dirname $0`/../etc/config.sh
+. $BASE/lib/common.sh
+
+PKG=$1
+RRD=$BASE/log/mirror-size/$PKG.rrd
+
+if [ "$PKG" == "" ]; then
+	echo_error "Usage: $0 [package]"	
+	exit 1
+fi
+if [ ! -f "$RRD" ]; then
+	echo_error "Error: RRD file doesn't exist. Have you run collect-mirror-size?"
+	exit 2
+fi
+
+TITLE=`cat $BASE/pkgs/$PKG/name`
+
+COLOR=`get_color $PKG`
+
+IMGBASE=$BASE/data/mirror-size
+IMGWEEK=$IMGBASE/$PKG.week.png
+IMGYEAR=$IMGBASE/$PKG.year.png
+
+mkdir -p $IMGBASE
+
+# Weekly image
+
+rrdtool graph $IMGWEEK \
+	--start -1w \
+	--title "$TITLE" \
+	DEF:size=$RRD:size:AVERAGE \
+	CDEF:sizeKB=size,1024,* \
+	LINE2:sizeKB\#$COLOR > /dev/null
+
+# Anual image
+
+rrdtool graph $IMGYEAR \
+	--start -1y \
+	--title "$TITLE" \
+	DEF:size=$RRD:size:AVERAGE \
+	CDEF:sizeKB=size,1024,* \
+	LINE2:sizeKB\#$COLOR > /dev/null
+

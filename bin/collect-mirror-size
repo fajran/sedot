@@ -20,6 +20,7 @@ ensure_rrd () {
 
 	NOW=`date "+%s"`
 	INTERVAL=86400
+	INTERVAL3=$(( INTERVAL * 3 ))
 	START=$(( NOW - 3 * INTERVAL ))
 	HIYEAR=$(( 366 * 5 ))
 	LOYEAR=$(( 52 * 15 ))
@@ -27,7 +28,7 @@ ensure_rrd () {
 	rrdtool create "$RRD" \
 		--step $INTERVAL \
 		--start $START \
-		DS:value:GAUGE:$INTERVAL:0:U \
+		DS:size:GAUGE:$INTERVAL3:0:U \
 		RRA:AVERAGE:0.5:1:$HIYEAR \
 		RRA:AVERAGE:0.5:7:$LOYEAR \
 		RRA:MIN:0.5:7:$LOYEAR \
