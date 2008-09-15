@@ -15,7 +15,7 @@ CRON=$BASE/data/cron/$NODE.cron
 
 # Create crontab file
 
-cp $CRON $CRON.old
+[ -f $CRON ] && cp $CRON $CRON.old
 $BASE/bin/make-crontab $NODE
 
 # Update crontab

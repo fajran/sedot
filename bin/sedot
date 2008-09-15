@@ -80,6 +80,7 @@ NAME=`cat $PKGDIR/name`
 SOURCE=`get_content "$PKGDIR/source"`
 TARGET=`get_content "$PKGDIR/target"`
 
+mkdir -p $LOGDIR
 STEPFILE=$LOGDIR/step
 
 echo 0 > $STEPFILE
