@@ -1,6 +1,4 @@
 
-from __future__ import absolute_import
-
 from sedot.report.report import Generator
 
 from sedot import SEDOT_CONFIG

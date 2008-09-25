@@ -1,6 +1,4 @@
 
-from __future__ import absolute_import
-
 from sedot import Package, NoPackageError
 from sedot import SEDOT_CONFIG
 import os
