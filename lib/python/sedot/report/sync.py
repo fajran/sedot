@@ -4,7 +4,9 @@ from __future__ import absolute_import
 from sedot.report.report import Generator
 
 from sedot import SEDOT_CONFIG
+
 import os
+import glob
 import time
 from string import Template
 
@@ -56,6 +58,7 @@ class SyncGenerator(Generator):
 	<tr><th rowspan="2">Mirror</th>
 		<th colspan="3">Last synchronization</th>
 		<th colspan="2">Last successful synchronization</th>
+		<th rowspan="2">Locked?</th>
 	</tr>
 	<tr><th>Start</th>
 		<th>Finish</th>
@@ -72,6 +75,7 @@ class SyncGenerator(Generator):
 		<td class="status $class_last">$last_status</td>
 		<td class="date $class_success">$sync_time</td>
 		<td class="age $class_success">$sync_age</td>
+		<td>$locked</td>
 	</tr>
 """)
 
@@ -114,6 +118,10 @@ class SyncGenerator(Generator):
 			class_last=self._make_class_last(package.status.last)
 			class_success=self._make_class_success(package.status.success)
 
+			locked = ""
+			if glob.glob(os.path.join(package.target, '.SYNC-in-Progress-*')):
+				locked = """<img alt="locked" src="img/lock.png"/>"""
+
 			self.f.write(template.substitute(
 				mirror=package.name,
 				last_start=last_start,
@@ -123,6 +131,7 @@ class SyncGenerator(Generator):
 				sync_age=sync_age,
 				class_last=class_last,
 				class_success=class_success,
+				locked=locked,
 			))
 
 		self.f.write("""
