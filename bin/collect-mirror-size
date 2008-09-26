@@ -78,7 +78,7 @@ do
 	RRD=$LOGBASE/$pkg.rrd
 
 	ensure_rrd "$RRD"
-	update_rrd "$RRD" "$size"
+	update_rrd "$RRD" "$SIZE"
 done
 
 #
