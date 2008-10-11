@@ -63,7 +63,11 @@ class Package:
 		self.size = MirrorSize(self.package)
 	
 	def _read(self, file):
-		f = open(os.path.join(self.dir, file))
+		fname = os.path.join(self.dir, file)
+		if not os.path.isfile(fname):
+			return "#FF0000"
+
+		f = open(fname)
 		
 		for line in f.readlines():
 			line = line.strip()
