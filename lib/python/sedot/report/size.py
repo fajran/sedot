@@ -25,9 +25,9 @@ class MirrorSizeGenerator(Generator):
 """)
 
 		template = Template("""
-	<tr><td>$mirror</td>
-		<td>$size</td>
-		<td><img src="mirror-size/$pkg.month.png" alt="$mirror"/></td>
+	<tr><td class="name">$mirror</td>
+		<td class="size">$size</td>
+		<td class="graph"><img src="mirror-size/$pkg.month.png" alt="$mirror"/></td>
 	</tr>
 """)
 
@@ -43,7 +43,7 @@ class MirrorSizeGenerator(Generator):
 
 			out.write(template.substitute(
 				mirror=package.name,
-				size=package.size.size,
+				size=self._make_size(package.size.size),
 				pkg=package.package
 			))
 
@@ -51,4 +51,15 @@ class MirrorSizeGenerator(Generator):
 	</table>
 </div>
 """)
+	
+	def _make_size(self, size):
+		ms = ["KB", "MB", "GB"]:
+
+		for m in ms:
+			if size < 1024:
+				return "%.2f %s" % (size, m)
+				break
+			size = size / 1024.0
+		
+		return "%.2f %s" % (size, m)
 
