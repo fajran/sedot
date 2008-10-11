@@ -20,7 +20,6 @@ class SyncGenerator(Generator):
 	def _print_report(self, out):
 		out.write("""
 <div id="mirror-status">
-	<h2>Mirror Status</h2>
 	<table>
 	<tr><th rowspan="2">Mirror</th>
 		<th colspan="3">Last synchronization</th>
