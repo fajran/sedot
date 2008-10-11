@@ -64,27 +64,27 @@ class Package:
 	
 	def _read(self, file):
 		fname = os.path.join(self.dir, file)
-		if not os.path.isfile(fname):
-			return "#FF0000"
 
-		f = open(fname)
-		
-		for line in f.readlines():
-			line = line.strip()
-			if line[0] != '#':
-				return line
+		if os.path.isfile(fname):
+			f = open(fname)
+			for line in f.readlines():
+				line = line.strip()
+				if line[0] != '#':
+					return line
 		
 		return None
 	
 	def _read_color(self, file):
-		f = open(os.path.join(self.dir, file))
+		fname = os.path.join(self.dir, file)
+
+		if os.path.isfile(fname):
+			f = open(fname)
+			for line in f.readlines():
+				line = line.strip()
+				if line[0] != '':
+					return line
 		
-		for line in f.readlines():
-			line = line.strip()
-			if line[0] != '':
-				return line
-		
-		return None
+		return "#FF0000"
 
 	def load_status(self):
 		
