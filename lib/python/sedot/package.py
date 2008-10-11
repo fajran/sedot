@@ -21,6 +21,8 @@ class MirrorSize:
 
 		self.size = None
 		self.time = None
+
+		self._load()
 	
 	def _load(self):
 		global SEDOT_BASE
