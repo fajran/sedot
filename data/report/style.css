@@ -15,58 +15,58 @@ h2 {
 	margin-bottom: 10px;
 }
 
-#mirror table {
+#mirror-status table {
 	font-family: verdana, helvetica, sans-serif;
 	font-size: 10pt;
 }
 
-#mirror table th {
+#mirror-status table th {
 	padding: 2px 20px;
 }
-#mirror table td {
+#mirror-status table td {
 	padding: 5px 20px 5px 10px;
 	text-align: center;
 }
-#mirror table tr td.date {
+#mirror-status table tr td.date {
 	font-size: 8pt;
 	padding: 2px 20px;
 }
-#mirror table td.name {
+#mirror-status table td.name {
 	padding-right: 50px;
 	text-align: left;
 }
-#mirror table td.age {
+#mirror-status table td.age {
 	text-align: left;
 }
-#mirror table tr th {
+#mirror-status table tr th {
 	background: #ccc;
 }
-#mirror table {
+#mirror-status table {
 	border-collapse: collapse;
 }
-#mirror table td, #mirror table th {
+#mirror-status table td, #mirror-status table th {
 	border: 1px solid #888;
 	border-width: 1px 0 1px 0;
 }
-#mirror table .name, #mirror table .status {
+#mirror-status table .name, #mirror-status table .status {
 	border-right: 1px dotted #888;
 }
-#mirror td.unknown {
+#mirror-status td.unknown {
 	background: #ddd;
 }
-#mirror td.inprogress {
+#mirror-status td.inprogress {
 	background: #afa;
 }
-#mirror td.fail {
+#mirror-status td.fail {
 	background: #faa;
 }
-#mirror td.never {
+#mirror-status td.never {
 	background: #faa;
 }
-#mirror td.old {
+#mirror-status td.old {
 	background: #ffa;
 }
-#mirror td.outdated {
+#mirror-status td.outdated {
 	background: #faa;
 }
 

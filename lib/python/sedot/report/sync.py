@@ -11,46 +11,15 @@ from string import Template
 
 class SyncGenerator(Generator):
 
-	def set_packages(self, packages):
-		self.packages = packages
+	def __init__(self):
+		Generator.__init__(self)
 
-	def generate(self):
-		
-		file = os.path.join(self.outdir, "index.html")
+		self.report_name = "Mirror Status"
+		self.output_file = "index.html"
 
-		self.f = open(file, "w")
-
-		self._print_page_header()
-		self._print_header()
-
-		self._print_mirror_status()
-
-		self._print_footer()
-		self._print_page_footer()
-
-	def _print_header(self):
-		self.f.write("""
-<div id="header">
-	<h1>%s</h1>
-</div>
-<div id="content">
-""" % (self.name))
-
-	def _print_footer(self):
-
-		update_time = self._make_time(None)
-
-		self.f.write("""
-</div>
-<div id="footer">
-	<p id="generated">Last update: %s</p>
-	<p id="sedot"><a href="https://launchpad.net/sedot">Sedot sampai tua!</a> &trade;</p>
-</div>
-""" % (update_time))
-
-	def _print_mirror_status(self):
-		self.f.write("""
-<div id="mirror">
+	def _print_report(self, out):
+		out.write("""
+<div id="mirror-status">
 	<h2>Mirror Status</h2>
 	<table>
 	<tr><th rowspan="2">Mirror</th>
@@ -120,7 +89,7 @@ class SyncGenerator(Generator):
 			if glob.glob(os.path.join(package.target, '.SYNC-in-Progress-*')):
 				locked = """<img alt="locked" src="img/lock.png"/>"""
 
-			self.f.write(template.substitute(
+			out.write(template.substitute(
 				mirror=package.name,
 				last_start=last_start,
 				last_finish=last_finish,
@@ -132,7 +101,7 @@ class SyncGenerator(Generator):
 				locked=locked,
 			))
 
-		self.f.write("""
+		out.write("""
 	</table>
 </div>
 """)

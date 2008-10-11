@@ -61,8 +61,7 @@ plot () {
 # Plot graphs
 #
 
-NODEDIR=$BASE/nodes/$NODE
-PKGS=$NODEDIR/pkgs
+PKGS=$BASE/etc/report.pkgs
 
 RRDBASE=$BASE/log/mirror-size
 IMGBASE=$BASE/data/report/mirror-size
