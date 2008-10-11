@@ -16,7 +16,6 @@ class MirrorSizeGenerator(Generator):
 	def _print_report(self, out):
 		out.write("""
 <div id="mirror-size">
-	<h2>Mirror Size</h2>
 	<table>
 	<tr><th>Mirror</th>
 		<th>Size</th>

@@ -74,7 +74,8 @@ class Generator:
 	<h1>%s</h1>
 </div>
 <div id="content">
-""" % (self.name, self.name))
+<h2>%s</h2>
+""" % (self.name, self.name, self.report_name))
 
 	def _print_page_footer(self, out):
 		update_time = self._make_time(None)
