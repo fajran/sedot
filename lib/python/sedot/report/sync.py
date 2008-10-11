@@ -11,8 +11,8 @@ from string import Template
 
 class SyncGenerator(Generator):
 
-	def __init__(self):
-		Generator.__init__(self)
+	def __init__(self, outdir):
+		Generator.__init__(self, outdir)
 
 		self.report_name = "Mirror Status"
 		self.output_file = "index.html"

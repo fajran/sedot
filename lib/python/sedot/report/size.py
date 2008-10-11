@@ -7,8 +7,8 @@ from string import Template
 
 class MirrorSizeGenerator(Generator):
 	
-	def __init__(self):
-		Generator.__init__(self)
+	def __init__(self, outdir):
+		Generator.__init__(self, outdir)
 
 		self.report_name = "Mirror Size"
 		self.output_file = "size.html"
