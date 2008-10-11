@@ -23,6 +23,7 @@ plot () {
 	fi
 
 	IMGWEEK=$IMGBASE/$PKG.week.png
+	IMGMONTH=$IMGBASE/$PKG.month.png
 	IMGYEAR=$IMGBASE/$PKG.year.png
 
 	COLOR=`get_color $PKG`
@@ -32,6 +33,15 @@ plot () {
 	
 	rrdtool graph $IMGWEEK \
 		--start -1w \
+		--title "$TITLE" \
+		DEF:size=$RRD:size:AVERAGE \
+		CDEF:sizeKB=size,1024,* \
+		LINE2:sizeKB\#$COLOR > /dev/null
+	
+	# Monthly image
+	
+	rrdtool graph $IMGMONTH \
+		--start -1m \
 		--title "$TITLE" \
 		DEF:size=$RRD:size:AVERAGE \
 		CDEF:sizeKB=size,1024,* \
