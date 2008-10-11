@@ -37,9 +37,8 @@ ensure_rrd () {
 
 update_rrd () {
 	RRD=$1
-	VAL=$2
-
-	NOW=`date "+%s"`
+	NOW=$2
+	VAL=$3
 
 	rrdtool update "$RRD" $NOW:$VAL
 }
@@ -75,10 +74,15 @@ do
 	TARGET=`cat $PKGBASE/$pkg/target`
 	SIZE=`nice -n 9 du -s $TARGET | awk '{ print $1 }'`
 
+	NOW=`date "+%s"`
+
 	RRD=$LOGBASE/$pkg.rrd
+	LOG=$LOGBASE/$pkg.log
 
 	ensure_rrd "$RRD"
-	update_rrd "$RRD" "$SIZE"
+	update_rrd "$RRD" "$NOW" "$SIZE"
+
+	echo $NOW $SIZE >> $LOG
 done
 
 #
