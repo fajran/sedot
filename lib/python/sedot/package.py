@@ -34,7 +34,14 @@ class MirrorSize:
 			return
 		
 		lines = open(logname).readlines()[-1]
-		(self.time, self.size) = lines.split(" ")
+		(time, size) = lines.split(" ")
+
+		try:
+			self.time = int(time)
+			self.size = float(size)
+		except ValueError:
+			self.time = None
+			self.size = None
 
 	def __str__(self):
 		return str(self.size)

@@ -53,7 +53,8 @@ class MirrorSizeGenerator(Generator):
 """)
 	
 	def _make_size(self, size):
-		ms = ["KB", "MB", "GB"]:
+		size = float(size)
+		ms = ["KB", "MB", "GB"]
 
 		for m in ms:
 			if size < 1024:
