@@ -33,25 +33,31 @@ plot () {
 	
 	rrdtool graph $IMGWEEK \
 		--start -1w \
+		-l 0 \
 		DEF:size=$RRD:size:AVERAGE \
 		CDEF:sizeKB=size,1024,* \
-		LINE2:sizeKB\#$COLOR > /dev/null
+		AREA:sizeKB\#${COLOR}88 \
+		LINE1:sizeKB\#000000 > /dev/null
 	
 	# Monthly image
 	
 	rrdtool graph $IMGMONTH \
 		--start -1m \
+		-l 0 \
 		DEF:size=$RRD:size:AVERAGE \
 		CDEF:sizeKB=size,1024,* \
-		LINE2:sizeKB\#$COLOR > /dev/null
+		AREA:sizeKB\#${COLOR}88 \
+		LINE1:sizeKB\#000000 > /dev/null
 	
 	# Anual image
 	
 	rrdtool graph $IMGYEAR \
 		--start -1y \
+		-l 0 \
 		DEF:size=$RRD:size:AVERAGE \
 		CDEF:sizeKB=size,1024,* \
-		LINE2:sizeKB\#$COLOR > /dev/null
+		AREA:sizeKB\#${COLOR}88 \
+		LINE1:sizeKB\#000000 > /dev/null
 }
 
 #
