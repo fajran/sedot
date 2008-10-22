@@ -1,1 +1,1 @@
-0 */3 * * * collect-size
+0 */3 * * * $SEDOT_BASE/bin/collect-mirror-size
