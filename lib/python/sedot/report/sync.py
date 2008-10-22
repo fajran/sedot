@@ -24,7 +24,7 @@ class SyncGenerator(Generator):
 	<tr><th rowspan="2">Mirror</th>
 		<th colspan="3">Last synchronization</th>
 		<th colspan="2">Last successful synchronization</th>
-		<th rowspan="2">Locked?</th>
+		<th rowspan="2">&nbsp;</th>
 	</tr>
 	<tr><th>Start</th>
 		<th>Finish</th>
@@ -86,7 +86,7 @@ class SyncGenerator(Generator):
 
 			locked = ""
 			if glob.glob(os.path.join(package.target, '.SYNC-in-Progress-*')):
-				locked = """<img alt="locked" src="img/lock.png"/>"""
+				locked = """<img class="lock" alt="locked" src="img/lock.png"/>"""
 
 			out.write(template.substitute(
 				mirror=package.name,

@@ -49,7 +49,7 @@ write_status () {
 
 get_content () {
 	FILE=$1
-	echo `cat $FILE | grep -v '^\s*#' | head -n1`
+	echo `grep -v '^\s*#' $FILE | head -n1`
 }
 
 #

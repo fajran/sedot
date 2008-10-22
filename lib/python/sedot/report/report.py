@@ -28,7 +28,7 @@ class Generator:
 		pass
 
 	def _make_time(self, tuple=None):
-		format = "%d/%m/%Y %H:%M:%S"
+		format = "%d/%m/%y %H:%M"
 		if tuple == None:
 			return time.strftime(format)
 		else:
@@ -38,29 +38,57 @@ class Generator:
 		t = time.mktime(tuple)
 		now = time.mktime(time.localtime())
 
+		simple = True
+
 		delta = now - t
 
 		dday = 86400
 		dhour = 3600
 		dmin = 60
 
-		res = []
-		if delta / dday >= 1:
-			res.append("%d day" % int(delta/dday))
+		age = [0, 0, 0, 0]
+		age_string = [
+			("day", "days", "d"),
+			("hour", "hours", "h"), 
+			("min", "mins", "m"),
+			("sec", "secs", "s")
+		]
+
+		age[0] = int(delta/dday)
+		if age[0] > 0:
 			delta = delta % dday
 
-		if delta / dhour >= 1:
-			res.append("%d hour" % int(delta/dhour))
+		age[1] = int(delta/dhour)
+		if age[1] > 0:
 			delta = delta % dhour
 
-		if delta / dmin >= 1:
-			res.append("%d min" % int(delta/dmin))
+		age[2] = int(delta/dmin)
+		if age[2] > 0:
 			delta = delta % dmin
 
-		if delta >= 1:
-			res.append("%d sec" % int(delta))
+		age[3] = int(delta)
 
-		return " ".join(res)
+		res = []
+		for i in [0, 1, 2]:
+			str = None
+
+			if simple and age[i] > 0:
+				str = "%d%s" % (age[i], age_string[i][2])
+			elif age[i] == 1:
+				str = "%d %s" % (age[i], age_string[i][0])
+			elif age[i] > 1:
+				str = "%d %s" % (age[i], age_string[i][1])
+
+			if str:
+				res.append("<span>%s</span>" % str)
+
+		if not res:
+			res.append("a moment ago")
+
+		if simple:
+			return "<span class='age simple'>%s</span>" % (" ".join(res))
+		else:
+			return "<span class='age'>%s</span>" % (" ".join(res))
 
 	def _print_page_header(self, out):
 		out.write("""<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 

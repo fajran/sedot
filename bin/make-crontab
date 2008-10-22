@@ -41,7 +41,7 @@ fi
 echo "### Packages"
 echo
 
-cat $PKGS | while read pkg
+grep -v '^\s*#' $PKGS | while read pkg
 do
 	cron=`cat $BASE/pkgs/$pkg/cron`
 	echo "# $pkg"
