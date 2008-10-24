@@ -79,30 +79,36 @@ done
 # Plot combined graph
 #
 
-for pkg in `grep -v '^\s*#' $PKGS`
+for pkg in `grep -v '^\s*#' $PKGS | sort -u`
 do
 	RRD=$RRDBASE/$pkg.rrd
 	COLOR=`get_color $pkg`
-	TITLE=`cat $BASE/pkgs/$pkg/name`
+
+	# FIXME: keep the spaces as they are
+	TITLE=`cat $BASE/pkgs/$pkg/name | sed 's/\ /_/'`
+
 	PARAM="$PARAM DEF:size-$pkg=$RRD:size:AVERAGE AREA:size-$pkg#${COLOR}:$TITLE:STACK"
 done
-echo $PARAM
 
 IMGWEEK=$IMGBASE/+all.week.png
 IMGMONTH=$IMGBASE/+all.month.png
 IMGYEAR=$IMGBASE/+all.year.png
 
-rrdtool graph $IMGWEEK
+rrdtool graph $IMGWEEK \
 	--start -1w \
 	-l 0 \
+	-w 600 -h 350 \
 	$PARAM
 
-rrdtool graph $IMGMONTH
+rrdtool graph $IMGMONTH \
 	--start -1m \
 	-l 0 \
+	-w 600 -h 350 \
 	$PARAM
 
-rrdtool graph $IMGYEAR
+rrdtool graph $IMGYEAR \
 	--start -1y \
 	-l 0 \
+	-w 600 -h 350 \
 	$PARAM
+
