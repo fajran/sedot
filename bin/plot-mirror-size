@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
-. `dirname $0`/../etc/config.sh
+. `dirname $0`/../lib/init.sh
 . $BASE/lib/common.sh
 
 NODE=$1
 
 if [ "$NODE" == "" ]; then
-	NODE=`hostname -f`
+	NODE=$HOST
 fi
 
 #
