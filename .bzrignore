@@ -5,3 +5,4 @@ data/cron/*
 log/mirror-size/*
 data/report/index.html
 data/report/mirror-size/*
+pkgs/*

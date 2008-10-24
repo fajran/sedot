@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 . `dirname $0`/../lib/init.sh
 . $BASE/lib/common.sh
@@ -70,8 +70,39 @@ RRDBASE=$BASE/log/mirror-size
 IMGBASE=$BASE/data/report/mirror-size
 mkdir -p $IMGBASE
 
-cat $PKGS | while read pkg
+grep -v '^\s*#' $PKGS | while read pkg
 do
 	plot $pkg
 done
 
+#
+# Plot combined graph
+#
+
+for pkg in `grep -v '^\s*#' $PKGS`
+do
+	RRD=$RRDBASE/$pkg.rrd
+	COLOR=`get_color $pkg`
+	TITLE=`cat $BASE/pkgs/$pkg/name`
+	PARAM="$PARAM DEF:size-$pkg=$RRD:size:AVERAGE AREA:size-$pkg#${COLOR}:$TITLE:STACK"
+done
+echo $PARAM
+
+IMGWEEK=$IMGBASE/+all.week.png
+IMGMONTH=$IMGBASE/+all.month.png
+IMGYEAR=$IMGBASE/+all.year.png
+
+rrdtool graph $IMGWEEK
+	--start -1w \
+	-l 0 \
+	$PARAM
+
+rrdtool graph $IMGMONTH
+	--start -1m \
+	-l 0 \
+	$PARAM
+
+rrdtool graph $IMGYEAR
+	--start -1y \
+	-l 0 \
+	$PARAM
