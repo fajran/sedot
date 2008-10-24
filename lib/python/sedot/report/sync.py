@@ -75,7 +75,7 @@ class SyncGenerator(Generator):
 				last_status = "unknown"
 
 			if package.status.success:
-				sync_time=self._make_time(package.status.success.finish),
+				sync_time=self._make_time(package.status.success.finish)
 				sync_age=self._make_age(package.status.success.finish)
 			else:
 				sync_time = "Never"
