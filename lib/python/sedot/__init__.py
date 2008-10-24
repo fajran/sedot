@@ -1,9 +1,12 @@
 
-
+import socket
 from os import path
 
 SEDOT_LIBDIR = path.abspath(path.join(path.dirname(__file__), '..'))
 SEDOT_BASE = path.abspath(path.join(SEDOT_LIBDIR, '..', '..'))
+
+host = socket.gethostbyaddr(socket.gethostname())
+SEDOT_HOST = host[0]
 
 SEDOT_CONFIG = {}
 
@@ -12,29 +15,33 @@ def get_config():
 
 	file = path.join(SEDOT_BASE, 'etc', 'config.sh')
 
-	f = open(file)
-	for line in f.readlines():
-		line = line.strip()
-
-		if len(line) == 0:
+	for fn in [file, path.join(SEDOT_BASE, 'etc', 'conf.d', SEDOT_HOST]:
+		if not path.exists(fn):
 			continue
 
-		if line[0] == '#':
-			continue
+		f = open(file)
+		for line in f.readlines():
+			line = line.strip()
 
-		pos = line.find('=')
-		if pos < 0:
-			continue
+			if len(line) == 0:
+				continue
 
-		key = line[:pos].strip()
-		val = line[pos+1:].strip()
+			if line[0] == '#':
+				continue
 
-		if val[0] == '"' and val[-1] == '"':
-			val = val[1:-1]
-		elif val[0] == "'" and val[-1] == "'":
-			val = val[1:-1]
+			pos = line.find('=')
+			if pos < 0:
+				continue
 
-		SEDOT_CONFIG[key] = val
+			key = line[:pos].strip()
+			val = line[pos+1:].strip()
+
+			if val[0] == '"' and val[-1] == '"':
+				val = val[1:-1]
+			elif val[0] == "'" and val[-1] == "'":
+				val = val[1:-1]
+
+			SEDOT_CONFIG[key] = val
 
 get_config()
 
