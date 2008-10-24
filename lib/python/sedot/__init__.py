@@ -15,7 +15,7 @@ def get_config():
 
 	file = path.join(SEDOT_BASE, 'etc', 'config.sh')
 
-	for fn in [file, path.join(SEDOT_BASE, 'etc', 'conf.d', SEDOT_HOST]:
+	for fn in [file, path.join(SEDOT_BASE, 'etc', 'conf.d', SEDOT_HOST)]:
 		if not path.exists(fn):
 			continue
 
