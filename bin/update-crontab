@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-set -e
-
 . `dirname $0`/../lib/init.sh
+
+set -e
 
 NODE=$1
 
