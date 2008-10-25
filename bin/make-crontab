@@ -43,7 +43,7 @@ echo
 
 grep -v '^\s*#' $PKGS | while read pkg
 do
-	cron=`cat $BASE/pkgs/$pkg/cron`
+	cron=`get_value $BASE/pkgs/$pkg/cron`
 	echo "# $pkg"
 	echo "$cron \$SEDOT_BASE/bin/sedot $pkg > /dev/null 2>&1"
 	echo

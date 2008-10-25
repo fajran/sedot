@@ -68,9 +68,9 @@ LOGBASE=$BASE/log/mirror-size
 
 mkdir -p $LOGBASE
 
-cat $PKGS | while read pkg
+get_content $PKGS | while read pkg
 do
-	TARGET=`cat $PKGBASE/$pkg/target`
+	TARGET=`get_value $PKGBASE/$pkg/target`
 	SIZE=`nice -n 9 du -s $TARGET | awk '{ print $1 }'`
 
 	NOW=`date "+%s"`

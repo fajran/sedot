@@ -54,4 +54,13 @@ echo_error () {
 	echo "$*" >&2
 }
 
+get_content () {
+	FILE=$1
+	echo `grep -v '^\s*#' $FILE`
+}
+
+get_value () {
+	FILE=$1
+	echo `get_value $FILE | head -n1`
+}
 

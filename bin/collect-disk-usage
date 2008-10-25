@@ -35,7 +35,7 @@ OUT=$OUTDIR/`date '+%Y%m'`.txt
 mkdir -p $OUTDIR
 TS=`date '+%Y%m%d.%H%M%S'`
 
-cat $DISKS | while read disk
+get_content $DISKS | while read disk
 do
 	echo -n "$TS " >> $OUT
 	df -P | awk "\$1 == \"$disk\" { print \$1 \" \" \$3 \" \" \$4 }" >> $OUT

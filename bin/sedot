@@ -23,7 +23,7 @@ PKGDIR=$BASE/pkgs/$PKG
 LOG=$LOGDIR/sync.log
 STATUS=$LOGDIR/status.txt
 
-METHOD=`cat $PKGDIR/method`
+METHOD=`get_value $PKGDIR/method`
 
 #
 # Functions
@@ -43,11 +43,6 @@ write_status () {
 	echo "time `date -R`"
 
 	exec 1>&3
-}
-
-get_content () {
-	FILE=$1
-	echo `grep -v '^\s*#' $FILE | head -n1`
 }
 
 #
@@ -74,9 +69,9 @@ fi
 # Syncronize!
 #
 
-NAME=`cat $PKGDIR/name`
-SOURCE=`get_content "$PKGDIR/source"`
-TARGET=`get_content "$PKGDIR/target"`
+NAME=`get_value $PKGDIR/name`
+SOURCE=`get_value "$PKGDIR/source"`
+TARGET=`get_value "$PKGDIR/target"`
 
 mkdir -p $LOGDIR
 STEPFILE=$LOGDIR/step
@@ -146,7 +141,7 @@ exec 1>&3
 if [ -f $BASE/etc/post-sync-plugins ]; then
 	PLUGINDIR=$BASE/plugins
 
-	cat $BASE/etc/post-sync-plugins | while read plugin
+	get_content $BASE/etc/post-sync-plugins | while read plugin
 	do
 
 		PLUGIN=$PLUGINDIR/$plugin/$plugin

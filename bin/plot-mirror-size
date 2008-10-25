@@ -27,7 +27,7 @@ plot () {
 	IMGYEAR=$IMGBASE/$PKG.year.png
 
 	COLOR=`get_color $PKG`
-	TITLE=`cat $BASE/pkgs/$PKG/name`
+	TITLE=`get_value $BASE/pkgs/$PKG/name`
 
 	# Weekly image
 	
@@ -70,7 +70,7 @@ RRDBASE=$BASE/log/mirror-size
 IMGBASE=$BASE/data/report/mirror-size
 mkdir -p $IMGBASE
 
-grep -v '^\s*#' $PKGS | while read pkg
+get_content $PKGS | while read pkg
 do
 	plot $pkg
 done
@@ -79,6 +79,8 @@ done
 # Plot combined graph
 #
 
+# XXX: seems we have to write the loop like this.
+#      using get_content .. | while read .. wont work :(
 for pkg in `grep -v '^\s*#' $PKGS | sort -u`
 do
 	RRD=$RRDBASE/$pkg.rrd
