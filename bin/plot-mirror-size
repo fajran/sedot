@@ -87,7 +87,7 @@ do
 	COLOR=`get_color $pkg`
 
 	# FIXME: keep the spaces as they are
-	TITLE=`cat $BASE/pkgs/$pkg/name | sed 's/\ /_/'`
+	TITLE=`cat $BASE/pkgs/$pkg/name | sed 's/\ /_/g'`
 
 	PARAM="$PARAM DEF:size-$pkg=$RRD:size:AVERAGE AREA:size-$pkg#${COLOR}:$TITLE:STACK"
 done
@@ -100,17 +100,17 @@ rrdtool graph $IMGWEEK \
 	--start -1w \
 	-l 0 \
 	-w 600 -h 350 \
-	$PARAM
+	$PARAM > /dev/null
 
 rrdtool graph $IMGMONTH \
 	--start -1m \
 	-l 0 \
 	-w 600 -h 350 \
-	$PARAM
+	$PARAM > /dev/null
 
 rrdtool graph $IMGYEAR \
 	--start -1y \
 	-l 0 \
 	-w 600 -h 350 \
-	$PARAM
+	$PARAM > /dev/null
 
