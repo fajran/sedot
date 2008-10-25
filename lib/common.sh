@@ -61,6 +61,6 @@ get_content () {
 
 get_value () {
 	FILE=$1
-	echo `get_value $FILE | head -n1`
+	echo `get_content $FILE | head -n1`
 }
 
