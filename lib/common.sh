@@ -56,11 +56,11 @@ echo_error () {
 
 get_content () {
 	FILE=$1
-	echo `grep -v '^\s*#' $FILE`
+	echo "`grep -v '^\s*#' $FILE`"
 }
 
 get_value () {
 	FILE=$1
-	echo `get_content $FILE | head -n1`
+	echo "`get_content $FILE | head -n1`"
 }
 
