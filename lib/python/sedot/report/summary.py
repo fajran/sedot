@@ -110,6 +110,11 @@ class SummaryGenerator(Generator):
 
 			class_success=self._make_class_success(package.status.success)
 
+			if package.size.size:
+				size = self._make_size(package.size.size)
+			else:
+				size = "unknown"
+
 			out.write(template.substitute(
 				mirror_link=mirror_link,
 				other_link=" ".join(other_link),
@@ -117,7 +122,7 @@ class SummaryGenerator(Generator):
 				last_link=last_link,
 				class_success=class_success,
 				sync_age=sync_age,
-				size=self._make_size(package.size.size)
+				size=size
 			))
 
 		out.write("""

@@ -39,7 +39,7 @@ class Generator:
 
 	def _make_size(self, size):
 		size = float(size)
-		ms = ["KB", "MB", "GB"]
+		ms = ["KB", "MB", "GB", "TB"]
 
 		for m in ms:
 			if size < 1024:
