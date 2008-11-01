@@ -43,6 +43,7 @@ class SummaryGenerator(Generator):
 	<tr><th rowspan="2">Mirror</th>
 		<th colspan="2">Syncronization</th>
 		<th rowspan="2">Size</th>
+		<th rowspan="2">&nbsp;</th>
 	</tr>
 	<tr><th>Last</th>
 		<th>Age</th>
@@ -51,9 +52,10 @@ class SummaryGenerator(Generator):
 
 		template = Template("""
 	<tr><td class="name">$mirror_link $other_link</td>
-		<td class="date $class_last">$last_link</td>
+		<td class="date $class_last"><img src="$last_img" alt="$class_last"/> $last_link</td>
 		<td class="age $class_success">$sync_age</td>
 		<td class="size">$size</td>
+		<td>$locked</td>
 	</tr>
 """)
 
@@ -87,6 +89,7 @@ class SummaryGenerator(Generator):
 					last_time=self._make_time(package.status.last.time)
 				last_link = '<span title="In Progress">%s</span>' % last_time
 				class_last = "inprogress"
+				last_img = "img/hourglass.png"
 
 				if package.status.last.finish:
 					last_time = self._make_time(package.status.last.finish)
@@ -96,9 +99,11 @@ class SummaryGenerator(Generator):
 					if package.status.last.success:
 						last_link = '<span title="Success"><a href="%s">%s</a></span>' % (log_url, last_time)
 						class_last = "success"
+						last_img = "img/tick.png"
 					else:
 						last_link = '<span title="Fail"><a href="%s">%s</a></span>' % (log_url, last_time)
 						class_last = "fail"
+						last_img = "img/cross.png"
 
 			
 			if package.status.success:
@@ -115,6 +120,10 @@ class SummaryGenerator(Generator):
 			else:
 				size = "unknown"
 
+			locked = ""
+			if glob.glob(os.path.join(package.target, '.SYNC-in-Progress-*')):
+				locked = """<img class="lock" alt="locked" src="img/lock.png"/>"""
+
 			out.write(template.substitute(
 				mirror_link=mirror_link,
 				other_link=" ".join(other_link),
@@ -122,7 +131,9 @@ class SummaryGenerator(Generator):
 				last_link=last_link,
 				class_success=class_success,
 				sync_age=sync_age,
-				size=size
+				last_img=last_img,
+				size=size,
+				locked=locked
 			))
 
 		out.write("""

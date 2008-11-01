@@ -19,6 +19,9 @@ h2 {
 	text-decoration: none;
 	color: blue;
 }
+#mirror-summary td.name a:hover {
+	text-decoration: underline;
+}
 #mirror-summary td.name span.other {
 	font-size: 10px;
 }
@@ -119,6 +122,19 @@ h2 {
 	text-align: left;
 }
 
+
+#mirror-summary table.packages tr td.fail,
+#mirror-summary table.packages tr td.success,
+#mirror-summary table.packages tr td.inprogress {
+	padding-left: 10px;
+}
+#mirror-summary table.packages tr td.fail img,
+#mirror-summary table.packages tr td.success img,
+#mirror-summary table.packages tr td.inprogress img {
+	margin-right: 10px;
+	vertical-align: middle;
+}
+
 #footer {
 	border-top: 1px solid #888;
 	margin-top: 50px;
@@ -156,7 +172,5 @@ h2 {
 #reports ul li a:hover {
 	background: #ccc;
 }
-
-
 
 
