@@ -30,9 +30,10 @@ get_url () {
 
 	FURL=$BASE/pkgs/$PKG/url
 	[ -f $FURL ] || return 1
-
 	
-	if [ "$PROTOCOL" != "" ]; then
+	if [ "$PROTOCOL" == "rsync" ]; then
+		grep '^rsync:\/\/\|^[^:]\+::' $FURL | sed 's/\([^:]\+\)::/rsync:\/\/\1\//'
+	else if [ "$PROTOCOL" != "" ]; then
 		grep "^$PROTOCOL:\/\/" $FURL
 	else
 		cat $FURL
@@ -63,4 +64,10 @@ get_value () {
 	FILE=$1
 	echo "`get_content $FILE | head -n1`"
 }
+
+get_rsync_source () {
+	PKG=$1
+	sed 's/rsync:\/\/\([^/]\+\)\//\1::/' $PKG
+}
+
 

@@ -26,7 +26,7 @@ class MirrorSizeGenerator(Generator):
 		template = Template("""
 	<tr><td class="name">$mirror</td>
 		<td class="size">$size</td>
-		<td class="graph"><img src="mirror-size/$pkg.month.png" alt="$mirror"/></td>
+		<td class="graph"><img src="mirror-size/$pkg.year.png" alt="$mirror"/></td>
 	</tr>
 """)
 
