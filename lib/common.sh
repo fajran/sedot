@@ -33,12 +33,13 @@ get_url () {
 	
 	if [ "$PROTOCOL" == "rsync" ]; then
 		grep '^rsync:\/\/\|^[^:]\+::' $FURL | sed 's/\([^:]\+\)::/rsync:\/\/\1\//'
-	else if [ "$PROTOCOL" != "" ]; then
+	elif [ "$PROTOCOL" != "" ]; then
 		grep "^$PROTOCOL:\/\/" $FURL
 	else
 		cat $FURL
 	fi
 }
+
 
 get_color () {
 	PKG=$1

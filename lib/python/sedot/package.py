@@ -68,6 +68,7 @@ class Package:
 		self.name = self._read("name")
 		self.cron = self._read("cron")
 		self.color = self._read_color("color")
+		self.urls = self._read_urls("url")
 
 		self.size = MirrorSize(self.package)
 	
@@ -94,6 +95,28 @@ class Package:
 					return line
 		
 		return "#FF0000"
+
+	def _read_urls(self, file):
+		fname = os.path.join(self.dir, file)
+
+		res = {
+			'http': None,
+			'ftp': None,
+			'rsync': None
+		}
+		
+		if os.path.isfile(fname):
+			f = open(fname)
+			for line in f.readlines():
+				line = line.strip()
+				if line[0:7] == 'http://' and res['http'] == None:
+					res['http'] = line
+				elif line[0:6] == 'ftp://' and res['ftp'] == None:
+					res['ftp'] = line
+				elif line[0:8] == 'rsync://' and res['rsync'] == None:
+					res['rsync'] = line
+		
+		return res
 
 	def load_status(self):
 		

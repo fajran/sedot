@@ -17,6 +17,9 @@ class Generator:
 	def set_packages(self, packages):
 		self.packages = packages
 
+	def set_all_generators(self, generators):
+		self.generators = generators
+
 	def generate(self):
 		file = os.path.join(self.outdir, self.output_file)
 		f = open(file, "w")
@@ -33,6 +36,18 @@ class Generator:
 			return time.strftime(format)
 		else:
 			return time.strftime(format, tuple)
+
+	def _make_size(self, size):
+		size = float(size)
+		ms = ["KB", "MB", "GB"]
+
+		for m in ms:
+			if size < 1024:
+				return "%.2f %s" % (size, m)
+				break
+			size = size / 1024.0
+		
+		return "%.2f %s" % (size, m)
 
 	def _make_age(self, tuple):
 		t = time.mktime(tuple)
@@ -91,6 +106,13 @@ class Generator:
 			return "<span class='age'>%s</span>" % (" ".join(res))
 
 	def _print_page_header(self, out):
+		
+		reports_link = ""
+		for gen in self.generators:
+			reports_link += '<li><a href="%s">%s</a></li>' % (gen.output_file, gen.report_name_short)
+		if reports_link:
+			reports_link = '<ul>' + reports_link + '</ul>'
+
 		out.write("""<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html><head>
@@ -101,9 +123,10 @@ class Generator:
 <div id="header">
 	<h1>%s</h1>
 </div>
+<div id="reports">%s</div>
 <div id="content">
 <h2>%s</h2>
-""" % (self.name, self.name, self.report_name))
+""" % (self.name, self.name, reports_link, self.report_name))
 
 	def _print_page_footer(self, out):
 		update_time = self._make_time(None)
@@ -115,6 +138,7 @@ class Generator:
 </div>
 </div></body></html>""" % (update_time))
 
+from sedot.report.summary import SummaryGenerator
 from sedot.report.sync import SyncGenerator
 from sedot.report.size import MirrorSizeGenerator
 
@@ -144,11 +168,16 @@ class Report:
 
 		# Syncronization status
 
-		sync = SyncGenerator(self.outdir)
-		sync.set_packages(packages)
-		sync.generate()
+		generators = [SummaryGenerator, SyncGenerator, MirrorSizeGenerator]
 
-		mirror_size = MirrorSizeGenerator(self.outdir)
-		mirror_size.set_packages(packages)
-		mirror_size.generate()
+		obj_list = []
+		for gen in generators:
+			obj = gen(self.outdir)
+			obj.set_packages(packages)
+
+			obj_list.append(obj)
+
+		for obj in obj_list:
+			obj.set_all_generators(obj_list)
+			obj.generate()
 

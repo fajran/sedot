@@ -14,8 +14,9 @@ class SyncGenerator(Generator):
 	def __init__(self, outdir):
 		Generator.__init__(self, outdir)
 
-		self.report_name = "Mirror Status"
-		self.output_file = "index.html"
+		self.report_name_short = "Status"
+		self.report_name = "Synchronization Status"
+		self.output_file = "sync.html"
 
 	def _print_report(self, out):
 		out.write("""

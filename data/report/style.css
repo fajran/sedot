@@ -8,24 +8,35 @@ h1, h2 {
 h1 {
 	font-size: 20pt;
 	border-bottom: 1px solid #888;
-	margin-bottom: 20px;
 }
 h2 {
 	font-size: 16pt;
 	margin-bottom: 10px;
+	margin-top: 20px;
+}
+
+#mirror-summary td.name a {
+	text-decoration: none;
+	color: blue;
+}
+#mirror-summary td.name span.other {
+	font-size: 10px;
 }
 
 #mirror-status table,
+#mirror-summary table,
 #mirror-size table {
 	font-family: verdana, helvetica, sans-serif;
 	font-size: 10pt;
 }
 
 #mirror-status table th,
+#mirror-summary table th,
 #mirror-size table th {
 	padding: 2px 20px;
 }
-#mirror-status table td {
+#mirror-status table td,
+#mirror-summary table td {
 	padding: 5px 20px 5px 10px;
 	text-align: center;
 }
@@ -33,53 +44,80 @@ h2 {
 	padding: 5px 20px 5px 10px;
 	text-align: right;
 }
+#mirror-summary table tr td.date,
 #mirror-status table tr td.date {
 	font-size: 8pt;
 	padding: 2px 20px;
 }
 #mirror-status table td.name,
+#mirror-summary table td.name,
 #mirror-size table td.name {
 	padding-right: 50px;
 	text-align: left;
 }
+#mirror-summary table td.age,
 #mirror-status table td.age {
 	text-align: left;
 }
 #mirror-status table tr th,
+#mirror-summary table.packages tr th,
 #mirror-size table tr th {
 	background: #ccc;
 }
 #mirror-status table,
+#mirror-summary table,
 #mirror-size table {
 	border-collapse: collapse;
 }
+#mirror-summary table td, #mirror-summary table th,
 #mirror-status table td, #mirror-status table th,
 #mirror-size table th {
 	border: 1px solid #888;
 	border-width: 1px 0 1px 0;
 }
-#mirror-status table .name, #mirror-status table .status {
+#mirror-status table td.name, #mirror-status table td.status,
+#mirror-summary table td.name, #mirror-summary table td.age {
 	border-right: 1px dotted #888;
 }
+#mirror-summary td.unknown,
 #mirror-status td.unknown {
 	background: #ddd;
 }
+#mirror-summary td.inprogress,
 #mirror-status td.inprogress {
 	background: #afa;
 }
+#mirror-summary td.fail,
 #mirror-status td.fail {
 	background: #faa;
 }
+#mirror-summary td.never,
 #mirror-status td.never {
 	background: #faa;
 }
+#mirror-summary td.old,
 #mirror-status td.old {
 	background: #ffa;
 }
+#mirror-summary td.outdated,
 #mirror-status td.outdated {
 	background: #faa;
 }
+#mirror-summary td.size {
+	text-align: right;
+	padding-left: 30px;
+}
 
+#mirror-summary table.overview {
+	margin-bottom: 20px;
+}
+#mirror-summary table.overview th {
+	padding-left: 10px;
+}
+#mirror-summary table.overview th,
+#mirror-summary table.overview td {
+	text-align: left;
+}
 
 #footer {
 	border-top: 1px solid #888;
@@ -96,5 +134,29 @@ h2 {
 	float: right;
 	margin: 0px;
 }
+
+#reports {
+	background: #eee;
+}
+#reports ul {
+	padding: 0px;
+	margin: 0px;
+	padding-bottom: 2px;
+}
+#reports ul li {
+	display: inline;
+	font-family: verdana, helvetica, sans-serif;
+	font-size: 12px;
+}
+#reports ul li a {
+	text-decoration: none;
+	color: black;
+	padding: 2px 5px;
+}
+#reports ul li a:hover {
+	background: #ccc;
+}
+
+
 
 

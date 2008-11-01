@@ -10,6 +10,7 @@ class MirrorSizeGenerator(Generator):
 	def __init__(self, outdir):
 		Generator.__init__(self, outdir)
 
+		self.report_name_short = "Size"
 		self.report_name = "Mirror Size"
 		self.output_file = "size.html"
 	
@@ -51,15 +52,3 @@ class MirrorSizeGenerator(Generator):
 </div>
 """)
 	
-	def _make_size(self, size):
-		size = float(size)
-		ms = ["KB", "MB", "GB"]
-
-		for m in ms:
-			if size < 1024:
-				return "%.2f %s" % (size, m)
-				break
-			size = size / 1024.0
-		
-		return "%.2f %s" % (size, m)
-
