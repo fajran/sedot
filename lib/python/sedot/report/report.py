@@ -14,6 +14,9 @@ class Generator:
 		global SEDOT_CONFIG
 		self.name = SEDOT_CONFIG.get('MIRROR_NAME', None)
 
+		self.day_old = 2
+		self.day_outdated = 7
+
 	def set_packages(self, packages):
 		self.packages = packages
 
@@ -137,6 +140,24 @@ class Generator:
 	<p id="sedot"><a href="https://launchpad.net/sedot">Sedot sampai tua!</a> &trade;</p>
 </div>
 </div></body></html>""" % (update_time))
+
+	def _make_class_success(self, data):
+		if data == None:
+			return "never"
+		else:
+			t = time.mktime(data.finish)
+			now = time.mktime(time.localtime())
+			delta = now - t
+
+			day = 86400
+
+			if delta > self.day_outdated * day:
+				return "outdated"
+			elif delta > self.day_old * day:
+				return "old"
+			else:
+				return "uptodate"
+
 
 from sedot.report.summary import SummaryGenerator
 from sedot.report.sync import SyncGenerator
