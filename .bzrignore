@@ -4,5 +4,7 @@ data/lock/*
 data/cron/*
 log/mirror-size/*
 data/report/index.html
+data/report/sync.html
+data/report/size.html
 data/report/mirror-size/*
 pkgs/*
