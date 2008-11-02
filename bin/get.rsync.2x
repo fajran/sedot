@@ -14,5 +14,13 @@ if [ -f $PKGDIR/rsync.include ]; then
 fi
 
 echo 1 > $STEPFILE
+echo "## Sedot: First stage"
+rsync -av --stats --timeout=7200 $INCLUDE $EXCLUDE $SOURCE $TARGET
+
+echo 2 > $STEPFILE
+sleep 600
+
+echo 3 > $STEPFILE
+echo "## Sedot: Second stage"
 rsync -av --stats --timeout=7200 $INCLUDE $EXCLUDE --delete-after $SOURCE $TARGET
 
