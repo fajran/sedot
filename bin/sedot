@@ -90,8 +90,8 @@ TIME_START=`date -R`
 write_status "100" "In progress"
 
 (
-exec 1>$LOG
-exec 2>$LOG
+exec 1>>$LOG
+exec 2>>$LOG
 
 set -e
 export SOURCE
