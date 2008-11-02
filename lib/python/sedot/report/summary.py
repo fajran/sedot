@@ -42,7 +42,7 @@ class SummaryGenerator(Generator):
 	<table class="packages">
 	<tr><th rowspan="2">&nbsp;</th>
 		<th rowspan="2">Mirror</th>
-		<th colspan="2">Syncronization</th>
+		<th colspan="2">Synchronization</th>
 		<th rowspan="2">Size</th>
 		<th rowspan="2">&nbsp;</th>
 	</tr>
@@ -147,6 +147,16 @@ class SummaryGenerator(Generator):
 
 		out.write("""
 	</table>
+
+	<div class="legend">
+		<h3>Legend</h3>
+		<p><span><img src="img/success.png"/> success/up to date</span>
+			<span><img src="img/inprogress.png"/> in progress</span>
+			<span><img src="img/old.png"/> old</span>
+			<span><img src="img/fail.png"/> fail/outdated</span>
+		</p>
+		<p><span><img src="img/lock.png"/> Lock file exists (should be only the case when syncing is in progress, otherwise something has happened)</span></p>
+	</div>
 </div>
 """)
 
