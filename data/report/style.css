@@ -52,8 +52,11 @@ h2 {
 	font-size: 8pt;
 	padding: 2px 20px;
 }
+#mirror-summary table td.name {
+	padding-left: 0px;
+	text-align: left;
+}
 #mirror-status table td.name,
-#mirror-summary table td.name,
 #mirror-size table td.name {
 	padding-right: 50px;
 	text-align: left;
@@ -122,18 +125,25 @@ h2 {
 	text-align: left;
 }
 
-
-#mirror-summary table.packages tr td.fail,
-#mirror-summary table.packages tr td.success,
-#mirror-summary table.packages tr td.inprogress {
-	padding-left: 10px;
-}
-#mirror-summary table.packages tr td.fail img,
-#mirror-summary table.packages tr td.success img,
-#mirror-summary table.packages tr td.inprogress img {
-	margin-right: 10px;
+#mirror-summary table tr td img {
 	vertical-align: middle;
 }
+#mirror-summary table td.icon {
+	padding-left: 5px;
+	padding-right: 5px;
+	margin: 0px;
+}
+.legend {
+	font-family: verdana, helvetica, sans-serif;
+	font-size: 11px;
+}
+.legend img {
+	vertical-align: middle;
+}
+.legend p span {
+	margin-right: 10px;
+}
+
 
 #footer {
 	border-top: 1px solid #888;

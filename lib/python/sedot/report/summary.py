@@ -40,8 +40,9 @@ class SummaryGenerator(Generator):
 	</table>
 
 	<table class="packages">
-	<tr><th rowspan="2">Mirror</th>
-		<th colspan="2">Syncronization</th>
+	<tr><th rowspan="2">&nbsp;</th>
+		<th rowspan="2">Mirror</th>
+		<th colspan="2">Synchronization</th>
 		<th rowspan="2">Size</th>
 		<th rowspan="2">&nbsp;</th>
 	</tr>
@@ -51,8 +52,9 @@ class SummaryGenerator(Generator):
 """ % (total_packages, self._make_size(total_size)))
 
 		template = Template("""
-	<tr><td class="name">$mirror_link $other_link</td>
-		<td class="date $class_last"><img src="$last_img" alt="$class_last"/> $last_link</td>
+	<tr><td class="icon"><img src="img/$status_icon"/></td>
+		<td class="name">$mirror_link $other_link</td>
+		<td class="date $class_last">$last_link</td>
 		<td class="age $class_success">$sync_age</td>
 		<td class="size">$size</td>
 		<td>$locked</td>
@@ -89,7 +91,7 @@ class SummaryGenerator(Generator):
 					last_time=self._make_time(package.status.last.time)
 				last_link = '<span title="In Progress">%s</span>' % last_time
 				class_last = "inprogress"
-				last_img = "img/hourglass.png"
+				status_icon = "hourglass.png"
 
 				if package.status.last.finish:
 					last_time = self._make_time(package.status.last.finish)
@@ -99,21 +101,28 @@ class SummaryGenerator(Generator):
 					if package.status.last.success:
 						last_link = '<span title="Success"><a href="%s">%s</a></span>' % (log_url, last_time)
 						class_last = "success"
-						last_img = "img/tick.png"
+						status_icon = "tick.png"
 					else:
 						last_link = '<span title="Fail"><a href="%s">%s</a></span>' % (log_url, last_time)
 						class_last = "fail"
-						last_img = "img/cross.png"
+						status_icon = "error.png"
 
+
+			class_success=self._make_class_success(package.status.success)
 			
 			if package.status.success:
 				sync_time=self._make_time(package.status.success.finish)
 				sync_age=self._make_age(package.status.success.finish)
+
+				if class_success == "old":
+					status_icon = "error.png"
+				elif class_success == "outdated":
+					status_icon = "exclamation.png"
+
 			else:
 				sync_time = "Never"
 				sync_age = "-"
-
-			class_success=self._make_class_success(package.status.success)
+				status_icon = "exclamation.png"
 
 			if package.size.size:
 				size = self._make_size(package.size.size)
@@ -131,30 +140,23 @@ class SummaryGenerator(Generator):
 				last_link=last_link,
 				class_success=class_success,
 				sync_age=sync_age,
-				last_img=last_img,
+				status_icon=status_icon,
 				size=size,
 				locked=locked
 			))
 
 		out.write("""
 	</table>
+
+	<div class="legend">
+		<h3>Legend</h3>
+		<p><span><img src="img/success.png"/> success/up to date</span>
+			<span><img src="img/inprogress.png"/> in progress</span>
+			<span><img src="img/old.png"/> old</span>
+			<span><img src="img/fail.png"/> fail/outdated</span>
+		</p>
+		<p><span><img src="img/lock.png"/> Lock file exists (should be only the case when syncing is in progress, otherwise something has happened)</span></p>
+	</div>
 </div>
 """)
-
-	def _make_class_success(self, data):
-		if data == None:
-			return "never"
-		else:
-			t = time.mktime(data.finish)
-			now = time.mktime(time.localtime())
-			delta = now - t
-
-			day = 86400
-
-			if delta > 7 * day:
-				return "outdated"
-			elif delta > 2 * day:
-				return "old"
-			else:
-				return "uptodate"
 

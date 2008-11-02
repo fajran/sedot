@@ -126,19 +126,3 @@ class SyncGenerator(Generator):
 		else:
 			return "fail"
 
-	def _make_class_success(self, data):
-		if data == None:
-			return "never"
-		else:
-			t = time.mktime(data.finish)
-			now = time.mktime(time.localtime())
-			delta = now - t
-
-			day = 86400
-
-			if delta > 7 * day:
-				return "outdated"
-			elif delta > 2 * day:
-				return "old"
-			else:
-				return "uptodate"
