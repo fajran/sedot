@@ -20,7 +20,7 @@ class SummaryGenerator(Generator):
 	def _print_report(self, out):
 		
 		pkgs = self.packages.keys()
-		pkgs.sort(lambda a, b: cmp(self.packages[a].name, self.packages[b].name))
+		pkgs.sort(lambda a, b: cmp(self.packages[a].name.lower(), self.packages[b].name.lower()))
 
 		total_packages = len(pkgs)
 		total_size = 0

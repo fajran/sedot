@@ -47,7 +47,7 @@ class SyncGenerator(Generator):
 """)
 
 		pkgs = self.packages.keys()
-		pkgs.sort(lambda a, b: cmp(self.packages[a].name, self.packages[b].name))
+		pkgs.sort(lambda a, b: cmp(self.packages[a].name.lower(), self.packages[b].name.lower()))
 
 		for pkg in pkgs:
 
