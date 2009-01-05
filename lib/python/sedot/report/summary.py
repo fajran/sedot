@@ -106,6 +106,10 @@ class SummaryGenerator(Generator):
 						last_link = '<span title="Fail"><a href="%s">%s</a></span>' % (log_url, last_time)
 						class_last = "fail"
 						status_icon = "error.png"
+			else:
+				last_link = "<span>unknown</span>"
+				class_last = "unknown"
+				status_icon = "error.png"
 
 
 			class_success=self._make_class_success(package.status.success)
