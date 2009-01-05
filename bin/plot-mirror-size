@@ -89,7 +89,8 @@ do
 	# FIXME: keep the spaces as they are
 	TITLE=`get_value $BASE/pkgs/$pkg/name`
 
-	PARAM="$PARAM DEF:size-$pkg=$RRD:size:AVERAGE AREA:size-$pkg#${COLOR}:\"$TITLE\":STACK"
+	cpkg=`echo $pkg | sed 's/\./-/g'`
+	PARAM="$PARAM DEF:size-$cpkg=$RRD:size:AVERAGE AREA:size-$cpkg#${COLOR}:\"$TITLE\":STACK"
 done
 
 IMGWEEK=$IMGBASE/+all.week.png
