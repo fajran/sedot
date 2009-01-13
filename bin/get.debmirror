@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+
+set -e
+
+HOST=
+ROOT_HOST=
+METHOD=
+DIST=
+ARCH=
+SECTION=
+
+if [ -f $PKGDIR/source ]; then
+	HOST=`cat $PKGDIR/debmirror.source`
+fi
+
+if [ -f $PKGDIR/root_host ]; then
+	ROOT_HOST=`cat $PKGDIR/debmirror.root_host`
+fi
+
+if [ -f $PKGDIR/debmirror.method ]; then
+	METHOD=`cat $PKGDIR/debmirror.method`
+fi
+
+if [ -f $PKGDIR/dist ]; then
+	DIST=`cat $PKGDIR/debmirror.dist`
+fi
+
+if [ -f $PKGDIR/arch ]; then
+	ARCH=`cat $PKGDIR/debmirror.arch`
+fi
+
+if [ -f $PKGDIR/section ]; then
+	SECTION=`cat $PKGDIR/debmirror.section`
+fi
+
+echo 1 > $STEPFILE
+debmirror -v -passive --host=$HOST --root=$ROOT_HOST --method=$METHOD --dist=$DIST --section=$SECTION --arch=$ARCH --ignore-release-gpg --ignore-missing-release --ignore-release-gpg $TARGET

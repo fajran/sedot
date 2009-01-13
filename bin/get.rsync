@@ -14,5 +14,5 @@ if [ -f $PKGDIR/rsync.include ]; then
 fi
 
 echo 1 > $STEPFILE
-rsync -av --stats --timeout=7200 $INCLUDE $EXCLUDE --delete-after $SOURCE $TARGET
+rsync -avh --stats --timeout=7200 $INCLUDE $EXCLUDE $SOURCE $TARGET
 

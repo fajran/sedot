@@ -22,5 +22,5 @@ sleep 600
 
 echo 3 > $STEPFILE
 echo "## Sedot: Second stage"
-rsync -av --stats --timeout=7200 $INCLUDE $EXCLUDE --delete-after $SOURCE $TARGET
+rsync -avh --stats --timeout=7200 $INCLUDE $EXCLUDE $SOURCE $TARGET
 

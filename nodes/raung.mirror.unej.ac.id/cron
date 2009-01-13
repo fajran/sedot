@@ -1,0 +1,2 @@
+0 3 * * * $SEDOT_BASE/bin/collect-mirror-size
+*/4 * * * * $SEDOT_BASE/bin/make-report

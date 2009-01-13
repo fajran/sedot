@@ -12,18 +12,19 @@ fi
 
 echo 1 > $STEPFILE
 echo "## Sedot: First stage"
-rsync -av --stats --timeout=7200 $EXCLUDE $INCLUDE $SOURCE/pool/ $TARGET/pool/
+rsync -avh --stats --timeout=7200 $EXCLUDE $INCLUDE $SOURCE/pool/ $TARGET/pool/
 
 echo 2 > $STEPFILE
 sleep 600
 
 echo 3 > $STEPFILE
 echo "## Sedot: Second stage"
-rsync -av --stats --timeout=7200 $EXCLUDE $INCLUDE --delete-after $SOURCE $TARGET
+rsync -avh --stats --timeout=7200 $EXCLUDE $INCLUDE --delete-after $SOURCE $TARGET
 
 echo 4 > $STEPFILE
 mkdir -p $TARGET/project/trace/
 
 echo 5 > $STEPFILE
 date -u > $TARGET/project/trace/`hostname -f`
-
+echo "Used ftpsync+sedot version: 42" >> $TARGET//project/trace/`hostname -f`
+echo "Running on Host `hostname -f`" >> $TARGET//project/trace/`hostname -f`
