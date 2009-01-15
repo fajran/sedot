@@ -110,6 +110,7 @@ write_status "100" "In progress"
 
 (
 set -e
+export BASE
 export SOURCE
 export TARGET
 export STEPFILE

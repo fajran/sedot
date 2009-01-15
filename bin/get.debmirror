@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+
+. $BASE/lib/common.sh
+
+set -e
+
+HOST=
+METHOD=
+DIST=
+ARCH=
+SECTION=
+
+if [ -f $PKGDIR/debmirror.root ]; then
+	ROOT="--root=`get_value $PKGDIR/debmirror.root`"
+fi
+
+if [ -f $PKGDIR/debmirror.method ]; then
+	METHOD="--method=`get_value $PKGDIR/debmirror.method`"
+fi
+
+if [ -f $PKGDIR/debmirror.dist ]; then
+	DIST="--dist=`get_value $PKGDIR/debmirror.dist`"
+fi
+
+if [ -f $PKGDIR/debmirror.arch ]; then
+	ARCH="--arch=`get_value $PKGDIR/debmirror.arch`"
+fi
+
+if [ -f $PKGDIR/debmirror.section ]; then
+	SECTION="--section=`get_value $PKGDIR/debmirror.section`"
+fi
+
+echo 1 > $STEPFILE
+debmirror -v --passive --host=$SOURCE $ROOT $METHOD $DIST $SECTION $ARCH --ignore-release-gpg --ignore-missing-release $TARGET
+
