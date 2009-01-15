@@ -100,6 +100,9 @@ if [ "$?" -ne "0" ]; then
 	sedot_exit 301
 fi
 
+rm -f $LOGBASE/current
+ln -s $TS $LOGBASE/current
+
 echo "Synchronization begin at `date -R`..."
 echo "- Source: $SOURCE"
 echo "- Target: $TARGET"
