@@ -90,10 +90,15 @@ class PackageStatus:
 		if not os.path.isdir(self.dir):
 			raise NoStatusError(self.package)
 
+		# TODO: check for "current" symlink first.
 		dirs = os.listdir(self.dir)
 		dirs.sort(reverse=True)
 
 		for timestamp in dirs:
+
+			# Skip the "current" symbolic link
+			if os.path.islink(os.path.join(self.dir, timestamp)):
+				continue
 
 			try:
 				status = SyncStatus(self.package, timestamp)
