@@ -10,11 +10,6 @@ if [ "$PKG" == "" ]; then
 	exit 1
 fi
 
-if [ ! -d $PKGDIR ]; then
-	echo_error "Unknown package: $PKG"
-	exit 2
-fi
-
 TS=`date +%Y%m%d.%H%M%S`
 LOGBASE=$BASE/log/sync/$PKG
 LOGDIR=$LOGBASE/$TS
@@ -22,6 +17,11 @@ PKGDIR=$BASE/pkgs/$PKG
 
 LOG=$LOGDIR/sync.log
 STATUS=$LOGDIR/status.txt
+
+if [ ! -d $PKGDIR ]; then
+	echo_error "Unknown package: $PKG"
+	exit 2
+fi
 
 METHOD=`get_value $PKGDIR/method`
 
@@ -49,6 +49,16 @@ write_status () {
 	exec 1>&3
 }
 
+sedot_exit () {
+	code=$1
+
+	echo "===== STATUS ====="
+	echo "Log directory: $LOGDIR"
+	cat $STATUS
+
+	exit $code
+}
+
 #
 # Preliminary checking
 #
@@ -59,14 +69,14 @@ SYNC=$BASE/bin/get.$METHOD
 
 if [ ! -f $SYNC ]; then
 	write_status "502" "Unsupported synchronization method: $METHOD"
-	exit 502
+	sedot_exit 502
 fi
 
 # Are source and target specified?
 
 if [ ! -f $PKGDIR/source -o ! -f $PKGDIR/target ]; then
 	write_status "503" "Package source and/or target informations are not found."
-	exit 503
+	sedot_exit 503
 fi
 
 #
@@ -87,16 +97,18 @@ trap 'do_unlock "$TARGET/.SYNC-in-Progress-$HOST"' 1 2 3 6
 do_lock $TARGET/.SYNC-in-Progress-$HOST
 if [ "$?" -ne "0" ]; then
 	write_status "301" "Unable to gain lock"
-	exit 301
+	sedot_exit 301
 fi
+
+echo "Synchronization begin at `date -R`..."
+echo "- Source: $SOURCE"
+echo "- Target: $TARGET"
+echo "- Method: $METHOD"
 
 TIME_START=`date -R`
 write_status "100" "In progress"
 
 (
-exec 1>>$LOG
-exec 2>>$LOG
-
 set -e
 export SOURCE
 export TARGET
@@ -105,7 +117,7 @@ export LOGDIR
 export PKGDIR
 
 $SYNC
-)
+) 2>&1 | tee -a $LOG
 
 RET=$?
 TIME_FINISH=`date -R`
@@ -182,4 +194,4 @@ if [ -f $BASE/etc/post-sync-plugins ]; then
 fi
 
 
-exit 0
+sedot_exit 0

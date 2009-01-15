@@ -3,6 +3,6 @@
 DIR=`dirname $0`
 
 (
-$DIR/sedot $@
-) &
+eval $DIR/sedot "$@"
+) > /dev/null 2>&1 &
 
