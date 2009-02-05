@@ -1,2 +1,6 @@
-*_ppc.deb
-*-ppc/
+*_alpha.deb
+*_alpha.udeb
+*_alpha.changes
+installer-alpha/
+binary-alpha/
+Contents-alpha*

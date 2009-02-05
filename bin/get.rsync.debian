@@ -12,14 +12,14 @@ fi
 
 echo 1 > $STEPFILE
 echo "## Sedot: First stage"
-rsync -av --stats --timeout=7200 $EXCLUDE $INCLUDE $SOURCE/pool/ $TARGET/pool/
+rsync -rltpHv --partial --chmod=a+rX,u+w,og-w --stats --timeout=7200 --delay-updates $EXCLUDE $INCLUDE $SOURCE/pool/ $TARGET/pool/
 
 echo 2 > $STEPFILE
 sleep 600
 
 echo 3 > $STEPFILE
 echo "## Sedot: Second stage"
-rsync -av --stats --timeout=7200 $EXCLUDE $INCLUDE --delete-after $SOURCE $TARGET
+rsync -rltpHv --partial --chmod=a+rX,u+w,og-w --stats --timeout=7200 --delay-updates $EXCLUDE $INCLUDE --delete-after $SOURCE $TARGET
 
 echo 4 > $STEPFILE
 mkdir -p $TARGET/project/trace/
