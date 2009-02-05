@@ -112,7 +112,7 @@ TIME_START=`date -R`
 write_status "100" "In progress"
 
 (
-set -e
+set +e
 export BASE
 export SOURCE
 export TARGET
@@ -121,9 +121,11 @@ export LOGDIR
 export PKGDIR
 
 $SYNC
+
+echo $? > $LOGDIR/return.txt
 ) 2>&1 | tee -a $LOG
 
-RET=$?
+RET=`cat $LOGDIR/return.txt`
 TIME_FINISH=`date -R`
 
 do_unlock $TARGET/.SYNC-in-Progress-$HOST
