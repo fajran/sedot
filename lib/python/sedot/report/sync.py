@@ -85,6 +85,9 @@ class SyncGenerator(Generator):
 			class_last=self._make_class_last(package.status.last)
 			class_success=self._make_class_success(package.status.success)
 
+			if package.status.success and not package.cron:
+				class_success = "uptodate"
+
 			locked = ""
 			if glob.glob(os.path.join(package.target, '.SYNC-in-Progress-*')):
 				locked = """<img class="lock" alt="locked" src="img/lock.png"/>"""

@@ -102,10 +102,17 @@ class SummaryGenerator(Generator):
 						last_link = '<span title="Success"><a href="%s">%s</a></span>' % (log_url, last_time)
 						class_last = "success"
 						status_icon = "tick.png"
+
 					else:
 						last_link = '<span title="Fail"><a href="%s">%s</a></span>' % (log_url, last_time)
 						class_last = "fail"
 						status_icon = "error.png"
+
+			elif not package.cron:
+				last_link = "<span>unknown</span>"
+				class_last = "unknown"
+				status_icon = "tick.png"
+
 			else:
 				last_link = "<span>unknown</span>"
 				class_last = "unknown"
@@ -118,6 +125,8 @@ class SummaryGenerator(Generator):
 				sync_time=self._make_time(package.status.success.finish)
 				sync_age=self._make_age(package.status.success.finish)
 
+				if not package.cron:
+					class_success = "uptodate"
 				if class_success == "old":
 					status_icon = "error.png"
 				elif class_success == "outdated":

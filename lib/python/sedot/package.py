@@ -79,7 +79,7 @@ class Package:
 			f = open(fname)
 			for line in f.readlines():
 				line = line.strip()
-				if line[0] != '#':
+				if len(line) > 0 and line[0] != '#':
 					return line
 		
 		return None
