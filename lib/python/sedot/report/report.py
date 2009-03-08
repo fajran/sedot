@@ -3,6 +3,7 @@ from sedot import Package, NoPackageError
 from sedot import SEDOT_CONFIG
 import os
 import time
+import shutil
 
 class Generator:
 
@@ -10,6 +11,7 @@ class Generator:
 		self.outdir = outdir
 		self.report_name = "Status"
 		self.output_file = "index.html"
+		self.output_file_tmp = "index.html.tmp"
 
 		global SEDOT_CONFIG
 		self.name = SEDOT_CONFIG.get('MIRROR_NAME', None)
@@ -24,11 +26,13 @@ class Generator:
 		self.generators = generators
 
 	def generate(self):
-		file = os.path.join(self.outdir, self.output_file)
+		file = os.path.join(self.outdir, self.output_file_tmp)
 		f = open(file, "w")
 		self._print_page_header(f)
 		self._print_report(f)
 		self._print_page_footer(f)
+
+		shutil.move(self.output_file_tmp, self.output_file)
 
 	def _print_report(self, f):
 		pass
