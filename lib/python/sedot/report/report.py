@@ -11,7 +11,7 @@ class Generator:
 		self.outdir = outdir
 		self.report_name = "Status"
 		self.output_file = "index.html"
-		self.output_file_tmp = "index.html.tmp"
+		self.output_file_tmp = ".index.html.tmp"
 
 		global SEDOT_CONFIG
 		self.name = SEDOT_CONFIG.get('MIRROR_NAME', None)
@@ -32,7 +32,8 @@ class Generator:
 		self._print_report(f)
 		self._print_page_footer(f)
 
-		shutil.move(self.output_file_tmp, self.output_file)
+		file_orig = os.path.join(self.outdir, self.output_file)
+		shutil.move(file, file_orig)
 
 	def _print_report(self, f):
 		pass
