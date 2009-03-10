@@ -48,6 +48,7 @@ update_rrd () {
 # Check lock
 #
 
+mkdir -p $BASE/data/lock/
 LOCK=$BASE/data/lock/collect-mirror-size-$HOST
 
 trap 'do_unlock "$LOCK"' 1 2 3 6
@@ -71,7 +72,7 @@ mkdir -p $LOGBASE
 get_content $PKGS | while read pkg
 do
 	TARGET=`get_value $PKGBASE/$pkg/target`
-	SIZE=`nice -n 9 du -s $TARGET | awk '{ print $1 }'`
+	SIZE=`nice -n 9 du -s $TARGET/ | awk '{ print $1 }'`
 
 	NOW=`date "+%s"`
 
