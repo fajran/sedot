@@ -14,9 +14,6 @@ while [ $# != 0 ]; do
 		-s|--source)
 			shift
 			SOURCE=$1 ;;
-		-t|--target)
-			shift
-			TARGET=$1 ;;
 		-m|--method)
 			shift
 			METHOD=$1 ;;
@@ -30,7 +27,6 @@ if [ "$PKG" == "" ]; then
 	echo_error "Usage: $0 [OPTION]... PACKAGE"
 	echo_error ""
 	echo_error "  --source SOURCE, -s        override source location"
-	echo_error "  --target TARGET, -t        override target location"
 	echo_error "  --method METHOD, -m        override synchronization method"
 	echo_error "  --dry-run                  tell sync method to do simulation only (dry-run)"
 	exit 1
