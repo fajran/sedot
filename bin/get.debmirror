@@ -30,6 +30,10 @@ if [ -f $PKGDIR/debmirror.section ]; then
 	SECTION="--section=`get_value $PKGDIR/debmirror.section`"
 fi
 
+if [ $DRYRUN == "1" ]; then
+	DRYRUNOPT="--dry-run"
+fi
+
 echo 1 > $STEPFILE
-debmirror -v --passive --host=$SOURCE $ROOT $METHOD $DIST $SECTION $ARCH --ignore-release-gpg --ignore-missing-release $TARGET
+debmirror -v --passive --host=$SOURCE $ROOT $METHOD $DIST $SECTION $ARCH $DRYRUNOPT --ignore-release-gpg --ignore-missing-release $TARGET
 

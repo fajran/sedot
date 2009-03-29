@@ -13,11 +13,15 @@ if [ -f $PKGDIR/rsync.include ]; then
 	INCLUDE="--include-from $PKGDIR/rsync.include"
 fi
 
+if [ $DRYRUN == "1" ]; then
+	DRYRUNOPT="--dry-run"
+fi
+
 echo 1 > $STEPFILE
 
 set +e
 
-rsync -rltpHv --partial --chmod=a+rX,u+w,og-w --stats --timeout=7200 --delay-updates $INCLUDE $EXCLUDE --delete-after $SOURCE $TARGET
+rsync -rltpHv --partial --chmod=a+rX,u+w,og-w --stats --timeout=7200 --delay-updates $DRYRUNOPT $INCLUDE $EXCLUDE --delete-after $SOURCE $TARGET
 ERR=$?
 
 # rsync's exit 23 is not really an error

@@ -10,16 +10,20 @@ if [ -f $PKGDIR/rsync.include ]; then
 	INCLUDE="--include-from $PKGDIR/rsync.include"
 fi
 
+if [ $DRYRUN == "1" ]; then
+	DRYRUNOPT="--dry-run"
+fi
+
 echo 1 > $STEPFILE
 echo "## Sedot: First stage"
-rsync -rltpHv --partial --chmod=a+rX,u+w,og-w --stats --timeout=7200 --delay-updates $EXCLUDE $INCLUDE $SOURCE/pool/ $TARGET/pool/
+rsync -rltpHv --partial --chmod=a+rX,u+w,og-w --stats --timeout=7200 --delay-updates $DRYRUNOPT $EXCLUDE $INCLUDE $SOURCE/pool/ $TARGET/pool/
 
 echo 2 > $STEPFILE
 sleep 600
 
 echo 3 > $STEPFILE
 echo "## Sedot: Second stage"
-rsync -rltpHv --partial --chmod=a+rX,u+w,og-w --stats --timeout=7200 --delay-updates $EXCLUDE $INCLUDE --delete-after $SOURCE $TARGET
+rsync -rltpHv --partial --chmod=a+rX,u+w,og-w --stats --timeout=7200 --delay-updates $DRYRUNOPT $EXCLUDE $INCLUDE --delete-after $SOURCE $TARGET
 
 echo 4 > $STEPFILE
 mkdir -p $TARGET/project/trace/

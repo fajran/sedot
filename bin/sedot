@@ -200,7 +200,9 @@ exec 1>&3
 # Close log
 #
 
-echo "== SEDOT STATUS ==" >> $LOG
+echo >> $LOG
+echo "## Sedot: Status" >> $LOG
+
 cat $STATUS >> $LOG
 
 if [ "$RET" -ne "0" ]; then
