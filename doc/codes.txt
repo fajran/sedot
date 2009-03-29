@@ -1,6 +1,7 @@
 501 Unknown package (deprecated)
 502 Unsupported synchronization method
 503 Resource source and/or target informations are not found
+504 Target directory doesn't exist
 301 Unable to gain lock
 302 Synchronization error
 200 Synchronization OK

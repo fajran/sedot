@@ -42,6 +42,8 @@ get_url () {
 
 
 get_color () {
+	exec 2> /dev/null
+
 	PKG=$1
 
 	FCOLOR=$BASE/pkgs/$PKG/color
@@ -57,6 +59,8 @@ echo_error () {
 }
 
 get_content () {
+	exec 2> /dev/null
+
 	FILE=$1
 	echo "`grep -v '^\s*#' $FILE`"
 }
@@ -67,6 +71,8 @@ get_value () {
 }
 
 get_rsync_source () {
+	exec 2> /dev/null
+
 	PKG=$1
 	sed 's/rsync:\/\/\([^/]\+\)\//\1::/' $PKG
 }

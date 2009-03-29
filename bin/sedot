@@ -3,27 +3,63 @@
 . `dirname $0`/../lib/init.sh
 . $BASE/lib/common.sh
 
-PKG=$1
+#
+# Parse arguments
+#
+
+while [ $# != 0 ]; do
+	case "$1" in
+		--dry-run)
+			DRYRUN=1 ;;
+		-s|--source)
+			shift
+			SOURCE=$1 ;;
+		-t|--target)
+			shift
+			TARGET=$1 ;;
+		-m|--method)
+			shift
+			METHOD=$1 ;;
+		*)
+			PKG=$1 ;;
+	esac
+	shift
+done
 
 if [ "$PKG" == "" ]; then
-	echo_error "Usage: $0 [package]"
+	echo_error "Usage: $0 [OPTION]... PACKAGE"
+	echo_error ""
+	echo_error "  --source SOURCE, -s        override source location"
+	echo_error "  --target TARGET, -t        override target location"
+	echo_error "  --method METHOD, -m        override synchronization method"
+	echo_error "  --dry-run                  tell sync method to do simulation only (dry-run)"
 	exit 1
 fi
+
+#
+# Initialization
+#
 
 TS=`date +%Y%m%d.%H%M%S`
 LOGBASE=$BASE/log/sync/$PKG
 LOGDIR=$LOGBASE/$TS
 PKGDIR=$BASE/pkgs/$PKG
 
+[ -z "$DRYRUN" ] && DRYRUN=0
+
 LOG=$LOGDIR/sync.log
 STATUS=$LOGDIR/status.txt
+
+NAME=`get_value $PKGDIR/name`
 
 if [ ! -d $PKGDIR ]; then
 	echo_error "Unknown package: $PKG"
 	exit 2
 fi
 
-METHOD=`get_value $PKGDIR/method`
+[ -z "$SOURCE" ] && SOURCE=`get_value "$PKGDIR/source"`
+[ -z "$TARGET" ] && TARGET=`get_value "$PKGDIR/target"`
+[ -z "$METHOD" ] && METHOD=`get_value "$PKGDIR/method"`
 
 #
 # Functions
@@ -41,9 +77,15 @@ write_status () {
 	echo "status $code"
 	echo "msg $msg"
 	echo "time `date -R`"
+	echo "dryrun $DRYRUN"
+	echo "method $METHOD"
 
 	if [ ! -z "$SOURCE" ]; then
 		echo "source $SOURCE"
+	fi
+
+	if [ ! -z "$TARGET" ]; then
+		echo "target $TARGET"
 	fi
 
 	exec 1>&3
@@ -74,18 +116,21 @@ fi
 
 # Are source and target specified?
 
-if [ ! -f $PKGDIR/source -o ! -f $PKGDIR/target ]; then
+if [ -z "$SOURCE" -o -z "$TARGET" ]; then
 	write_status "503" "Package source and/or target informations are not found."
 	sedot_exit 503
+fi
+
+# Does target directory exist?
+
+if [ ! -d "$TARGET" ]; then
+	write_status  "504" "Target directory doesn't exist: $TARGET"
+	sedot_exit 504
 fi
 
 #
 # Syncronize!
 #
-
-NAME=`get_value $PKGDIR/name`
-SOURCE=`get_value "$PKGDIR/source"`
-TARGET=`get_value "$PKGDIR/target"`
 
 mkdir -p $LOGDIR
 STEPFILE=$LOGDIR/step
@@ -119,6 +164,7 @@ export TARGET
 export STEPFILE
 export LOGDIR
 export PKGDIR
+export DRYRUN
 
 $SYNC
 
@@ -129,12 +175,6 @@ RET=`cat $LOGDIR/return.txt`
 TIME_FINISH=`date -R`
 
 do_unlock $TARGET/.SYNC-in-Progress-$HOST
-
-if [ "$RET" -ne "0" ]; then
-	tail -n 20 $LOG > $LOG.last.txt
-fi
-
-gzip -9 $LOG
 
 #
 # Write status
@@ -155,6 +195,19 @@ echo "start $TIME_START"
 echo "finish $TIME_FINISH"
 
 exec 1>&3
+
+#
+# Close log
+#
+
+echo "== SEDOT STATUS ==" >> $LOG
+cat $STATUS >> $LOG
+
+if [ "$RET" -ne "0" ]; then
+	tail -n 50 $LOG > $LOG.last.txt
+fi
+
+gzip -9 $LOG
 
 #
 # Call plugins
