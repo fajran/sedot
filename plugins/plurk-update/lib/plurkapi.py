@@ -62,7 +62,7 @@ class PlurkAPI:
         response = urllib2.urlopen( request )
         self._cookies.extract_cookies( response, request )
         for cookie in self._cookies:
-            if cookie.name == 'plurkcookie':
+            if cookie.name == 'plurkcookie1':
                 self._logged_in = True
                 break
         if self._logged_in == True:
@@ -111,17 +111,45 @@ class PlurkAPI:
         
         return True
             
-    def getPlurks(self, uid = None, date_from = None, date_offset = None, fetch_responses = False):
+    def getPlurks(self, uid = None, date_from = None, only_responded = False):
         """ If logged in, gets yours and your friends' plurks.
-            If not logged in, gets only the plurks for the specified user id. """
+            If not logged in, gets only the plurks for the specified user id.
+            date_from should be of the form 2008-9-5T19:07:29 """
         if uid == None:
             uid = self._uid
 
         params = { 'user_id': uid, }
         if date_from != None:
-            params['from_date'] = date_from
+            params['offset'] = date_from
+        if only_responded != False:
+            params['only_responded'] = 1
         post = urllib.urlencode(params)
         response = urllib2.urlopen(self._plurk_paths['plurk_get'], post )
+        page = response.read()
+        # The following two lines are a hack around the fact that
+        # simplejson doesn't create Date objects.
+        date_pat = re.compile('\"posted\": new Date\((\".+?\")\)')
+        data = simplejson.loads(re.sub(date_pat, '"posted": \g<1>', page))
+        return data
+
+    def getPlurksById(self, ids = []):
+        """ Gets individual plurks by their ids. """
+
+        params = { 'ids': '[%s]' % (','.join([str(id) for id in ids]), ), }
+        post = urllib.urlencode(params)
+        response = urllib2.urlopen(self._plurk_paths['plurk_get_by_id'], post )
+        page = response.read()
+        # The following two lines are a hack around the fact that
+        # simplejson doesn't create Date objects.
+        date_pat = re.compile('\"posted\": new Date\((\".+?\")\)')
+        data = simplejson.loads(re.sub(date_pat, '"posted": \g<1>', page))
+        return data
+
+    def getPlurkResponses(self, plurk_id):
+        """ Gets individual plurks by their ids. """
+
+        post = urllib.urlencode({ 'plurk_id': plurk_id })
+        response = urllib2.urlopen(self._plurk_paths['plurk_get_responses'], post )
         page = response.read()
         # The following two lines are a hack around the fact that
         # simplejson doesn't create Date objects.
@@ -180,6 +208,14 @@ class PlurkAPI:
         date_pat = re.compile(': new Date\((\".+?\")\)')
         return simplejson.loads(re.sub(date_pat, ': \g<1>', page))
 
+    def removeFriend(self, uid):
+        """ Removes the user with the specified uid as a friend """
+        if self._logged_in == False:
+            return False
+        post = urllib.urlencode({ 'friend_id': uid })
+        response = urllib2.urlopen(self._plurk_paths['remove_friend'], post )
+        return response.read()
+
     def uidToNickname(self, uid):
         """ Returns the nickname for the user with the given user id. """
         uid = str(uid)
@@ -202,6 +238,7 @@ class PlurkAPI:
         'plurk_add'             : 'http://www.plurk.com/TimeLine/addPlurk',
         'plurk_respond'         : 'http://www.plurk.com/Responses/add',
         'plurk_get'             : 'http://www.plurk.com/TimeLine/getPlurks',
+        'plurk_get_by_id'       : 'http://www.plurk.com/TimeLine/getPlurksById',
         'plurk_get_responses'   : 'http://www.plurk.com/Responses/get2',
         'plurk_get_unread'      : 'http://www.plurk.com/TimeLine/getUnreadPlurks',
         'plurk_mute'            : 'http://www.plurk.com/TimeLine/setMutePlurk',
@@ -214,10 +251,12 @@ class PlurkAPI:
         'friends_block'         : 'http://www.plurk.com/Friends/blockUser',
         'friends_remove_block'  : 'http://www.plurk.com/Friends/removeBlock',
         'friends_get_blocked'   : 'http://www.plurk.com/Friends/getBlockedByOffset',
-        'user_get_info'         : 'http://www.plurk.com/Users/fetchUserInfo'
+        'user_get_info'         : 'http://www.plurk.com/Users/fetchUserInfo',
+        'remove_friend'         : 'http://www.plurk.com/Users/removeFriend'
     }
 
-    _qualifiers = ( { 'en': (':', 'loves',  'likes', 'shares', 'gives', 'hates', 'wants', 'wishes',
-                             'has', 'will', 'asks', 'was', 'feels', 'thinks', 'says', 'is') },
-                  )
+    _qualifiers = { 'en': (':', 'loves',  'likes', 'shares', 'gives', 'hates', 'wants', 'wishes',
+                             'needs', 'will', 'hopes', 'asks', 'has', 'was', 'wonders', 'feels', 'thinks', 'says', 'is')
+                  }
+                  
 
