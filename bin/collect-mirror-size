@@ -72,17 +72,19 @@ mkdir -p $LOGBASE
 get_content $PKGS | while read pkg
 do
 	TARGET=`get_value $PKGBASE/$pkg/target`
-	SIZE=`nice -n 9 du -s $TARGET/ | awk '{ print $1 }'`
+	if [ -d $TARGET ]; then
+		SIZE=`nice -n 9 du -s $TARGET/ | awk '{ print $1 }'`
 
-	NOW=`date "+%s"`
+		NOW=`date "+%s"`
 
-	RRD=$LOGBASE/$pkg.rrd
-	LOG=$LOGBASE/$pkg.log
+		RRD=$LOGBASE/$pkg.rrd
+		LOG=$LOGBASE/$pkg.log
 
-	ensure_rrd "$RRD"
-	update_rrd "$RRD" "$NOW" "$SIZE"
+		ensure_rrd "$RRD"
+		update_rrd "$RRD" "$NOW" "$SIZE"
 
-	echo $NOW $SIZE >> $LOG
+		echo $NOW $SIZE >> $LOG
+	fi
 done
 
 #
