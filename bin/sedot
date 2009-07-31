@@ -136,7 +136,7 @@ if [ ! -d "$TARGET" ]; then
 fi
 
 #
-# Syncronize!
+# Synchronize!
 #
 
 STEPFILE=$LOGDIR/step
