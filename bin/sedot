@@ -63,6 +63,8 @@ fi
 
 TARGET=$TARGET/
 
+LOCKFILE=$TARGET/.SYNC-in-Progress-$HOST
+
 #
 # Functions
 #
@@ -104,7 +106,7 @@ sedot_exit () {
 }
 
 cleanup () {
-	do_unlock $TARGET/.SYNC-in-Progress-$HOST
+	do_unlock $LOCKFILE
 	rm $PIDFILE
 }
 
@@ -147,7 +149,7 @@ echo 0 > $STEPFILE
 
 trap 'cleanup' 1 2 3 6
 
-do_lock $TARGET/.SYNC-in-Progress-$HOST
+do_lock $LOCKFILE
 if [ "$?" -ne "0" ]; then
 	write_status "301" "Unable to gain lock"
 	sedot_exit 301
