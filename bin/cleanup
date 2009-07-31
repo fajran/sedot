@@ -3,8 +3,6 @@
 . `dirname $0`/../lib/init.sh
 . $BASE/lib/common.sh
 
-set -e
-
 NODE=$1
 
 if [ "$NODE" == "" ]; then
@@ -12,6 +10,7 @@ if [ "$NODE" == "" ]; then
 fi
 
 NODEDIR=$BASE/nodes/$NODE
+PKGS=$NODEDIR/pkgs
 PIDDIR=$BASE/var/run
 
 #
@@ -26,14 +25,18 @@ do
 	PIDFILE=$PIDDIR/sedot-$pkg.pid
 
 	if [ -f $LOCKFILE ]; then
-		PID=`cat $PIDFILE`
+		CLEANUP=1
 
-		ps $PID | grep sedot | grep $pkg > /dev/null 2>&1
+		if [ -f $PIDFILE ]; then
+			PID=`cat $PIDFILE`
+			ps $PID | grep sedot | grep $pkg > /dev/null 2>&1
+			[ "$?" -eq "0" ] && CLEANUP=0
+		fi
 
-		if [ "$?" -eq "0" ]; then
+		if [ "$CLEANUP" -eq "1" ]; then
 			# The process is not running anymore, then cleanup
-			echo rm $LOCKFILE
-			echo rm $PIDFILE
+			echo rm -f $LOCKFILE
+			echo rm -f $PIDFILE
 		fi
 	fi
 done
@@ -49,9 +52,9 @@ do
 
 	ps $PID | grep sedot | grep $PKG > /dev/null 2>&1
 
-	if [ "$?" -eq "0" ]; then
+	if [ "$?" -ne "0" ]; then
 		# The process is not running anymore, then cleanup
-		echo rm $PIDFILE
+		echo rm -f $pidfile
 	fi
 
 done
