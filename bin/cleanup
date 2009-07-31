@@ -35,8 +35,12 @@ do
 
 		if [ "$CLEANUP" -eq "1" ]; then
 			# The process is not running anymore, then cleanup
-			echo rm -f $LOCKFILE
-			echo rm -f $PIDFILE
+
+			echo "Removing $LOCKFILE"
+			rm -f $LOCKFILE
+
+			echo "Removing $PIDFILE"
+			rm -f $PIDFILE
 		fi
 	fi
 done
@@ -54,8 +58,12 @@ do
 
 	if [ "$?" -ne "0" ]; then
 		# The process is not running anymore, then cleanup
-		echo rm -f $pidfile
+
+		echo "Removing $pidfile"
+		rm -f $pidfile
 	fi
 
 done
+
+echo "done."
 
