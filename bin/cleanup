@@ -1,0 +1,58 @@
+#!/usr/bin/env bash
+
+. `dirname $0`/../lib/init.sh
+. $BASE/lib/common.sh
+
+set -e
+
+NODE=$1
+
+if [ "$NODE" == "" ]; then
+	NODE=$HOST
+fi
+
+NODEDIR=$BASE/nodes/$NODE
+PIDDIR=$BASE/var/run
+
+#
+# Cleanup lock files
+#
+
+grep -v '^\s*#' $PKGS | while read pkg
+do
+	PKGDIR=$BASE/pkgs/$pkg
+	TARGET=`get_value "$PKGDIR/target"`
+	LOCKFILE=$TARGET/.SYNC-in-Progress-$HOST
+	PIDFILE=$PIDDIR/sedot-$pkg.pid
+
+	if [ -f $LOCKFILE ]; then
+		PID=`cat $PIDFILE`
+
+		ps $PID | grep sedot | grep $pkg > /dev/null 2>&1
+
+		if [ "$?" -eq "0" ]; then
+			# The process is not running anymore, then cleanup
+			echo rm $LOCKFILE
+			echo rm $PIDFILE
+		fi
+	fi
+done
+
+#
+# Cleanup pid file
+#
+
+for pidfile in $PIDDIR/sedot-*.pid
+do
+	PKG=`echo $pidfile | sed 's/.*sedot-\(.*\).pid/\1/'`
+	PID=`cat $pidfile`
+
+	ps $PID | grep sedot | grep $PKG > /dev/null 2>&1
+
+	if [ "$?" -eq "0" ]; then
+		# The process is not running anymore, then cleanup
+		echo rm $PIDFILE
+	fi
+
+done
+
