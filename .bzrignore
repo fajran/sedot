@@ -8,3 +8,4 @@ data/report/sync.html
 data/report/size.html
 data/report/mirror-size/*
 pkgs/*
+var/run/*
