@@ -41,6 +41,8 @@ LOGBASE=$BASE/log/sync/$PKG
 LOGDIR=$LOGBASE/$TS
 PKGDIR=$BASE/pkgs/$PKG
 
+[ -z "$DRYRUN" ] && DRYRUN=0
+
 mkdir -p $LOGDIR
 LOG=$LOGDIR/sync.log
 STATUS=$LOGDIR/status.txt
@@ -52,10 +54,11 @@ if [ ! -d $PKGDIR ]; then
 	exit 2
 fi
 
-[ -z "$DRYRUN" ] && DRYRUN=0
 [ -z "$SOURCE" ] && SOURCE=`get_value "$PKGDIR/source"`
 [ -z "$TARGET" ] && TARGET=`get_value "$PKGDIR/target"`
 [ -z "$METHOD" ] && METHOD=`get_value "$PKGDIR/method"`
+
+TARGET=$TARGET/
 
 #
 # Functions
@@ -153,6 +156,7 @@ write_status "100" "In progress"
 
 (
 set +e
+
 export BASE
 export SOURCE
 export TARGET
