@@ -11,7 +11,6 @@ class Generator:
 		self.outdir = outdir
 		self.report_name = "Status"
 		self.output_file = "index.html"
-		self.output_file_tmp = ".index.html.tmp"
 
 		global SEDOT_CONFIG
 		self.name = SEDOT_CONFIG.get('MIRROR_NAME', None)
@@ -26,7 +25,8 @@ class Generator:
 		self.generators = generators
 
 	def generate(self):
-		file = os.path.join(self.outdir, self.output_file_tmp)
+		tmp = ".%s.tmp" % self.output_file
+		file = os.path.join(self.outdir, tmp)
 		f = open(file, "w")
 		self._print_page_header(f)
 		self._print_report(f)
