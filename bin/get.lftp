@@ -1,0 +1,12 @@
+#!/bin/env bash
+
+. "$BASE/lib/init.sh"
+. "$BASE/lib/common.sh"
+
+set -e
+exec lftp -c "set ftp:anon-pass mirror@$NODE;
+set cmd:verbose yes;
+set list-options -a;
+mirror --continue --delete --no-perms --verbose=3 \
+-x'\.(mirror|notar)' -x'\.in\..*\.' -X'lost+found' $@ $SOURCE/. $TARGET/;
+"
